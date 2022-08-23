@@ -1,0 +1,140 @@
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="区域选择"/>
+</head>
+<body class="pear-container">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">开发环境</div>
+                <div class="layui-card-body">
+                    Area 省市级联 选择组件
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">显示代码</h2>
+                    <div class="layui-colla-content">
+                        <pre class="layui-code" lay-encode="true">
+<link rel="stylesheet" href="/assets/component/pear/css/pear.css" />
+并
+<script src="/assets/component/layui/layui.js"></script>
+并
+<script src="/assets/component/pear/pear.js"></script>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    基本使用
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form">
+                        <div class="layui-form-item" id="area-picker">
+                            <div class="layui-form-label">网点地址</div>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <select name="province" class="province-selector" data-value="广东省">
+                                    <option value="">请选择省</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <select name="city" class="city-selector" data-value="深圳市">
+                                    <option value="">请选择市</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <select name="county" class="county-selector" data-value="龙岗区">
+                                    <option value="">请选择区</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    基本使用
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form">
+                        <div class="layui-form-item" id="area-picker-copy">
+                            <div class="layui-form-label">网点地址</div>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <select name="province" class="province-selector" data-value="广东省">
+                                    <option value="">请选择省</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <select name="city" class="city-selector" data-value="深圳市">
+                                    <option value="">请选择市</option>
+                                </select>
+                            </div>
+                            <div class="layui-input-inline" style="width: 200px;">
+                                <select name="county" class="county-selector" data-value="龙岗区">
+                                    <option value="">请选择区</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">显示代码</h2>
+                    <div class="layui-colla-content">
+                        <pre class="layui-code" lay-encode="true">
+layui.use(['area'], function () {
+    var area = layui.area;
+
+    area.render({
+        elem: '#area-picker',
+        change: function (res) {
+            console.log(res);
+        }
+    });
+});
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['layer', 'form', 'area', 'element', 'code'], function() {
+            var layer = layui.layer,
+                form = layui.form,
+                area = layui.area;
+
+            layui.code({ encode: true  });
+
+            area.render({
+                elem: '#area-picker',
+                change: function(res) {
+                    //选择结果
+                    console.log(res);
+                }
+            });
+
+            area.render({
+                elem: '#area-picker-copy',
+                change: function(res) {
+                    //选择结果
+                    console.log(res);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

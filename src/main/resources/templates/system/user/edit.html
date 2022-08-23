@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="编辑用户"/>
+</head>
+<body>
+    <form class="layui-form" action="">
+        <input type="hidden" id="id" name="id" value="${user.id}">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">账号</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="account" value="${user.account!}" id="account" lay-verify="required" autocomplete="off"
+                               placeholder="请输入账号" class="layui-input" disabled readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">用户名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="username" value="${user.username!}" lay-verify="required" autocomplete="off"
+                               placeholder="请输入用户名" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">邮箱</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="email" value="${user.email!}" autocomplete="off" placeholder="请输入邮箱"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">电话</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="mobile" value="${user.mobile!}" autocomplete="off"
+                               placeholder="请输入电话" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">性别</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="sex" value="0" title="未知" ${user.sex! == 0? 'checked' : ''}>
+                        <input type="radio" name="sex" value="1" title="男" ${user.sex! == 1? 'checked' : ''}>
+                        <input type="radio" name="sex" value="2" title="女" ${user.sex! == 2? 'checked' : ''}>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">生日</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="birthday" value="${user.birthday!}" class="layui-input" id="birthday" placeholder="yyyy-MM-dd">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">角色</label>
+                    <div class="layui-input-block">
+                        <select name="role" xm-select="role" xm-select-skin="normal" value="">
+                            <option value=""></option>
+                            <:for items="${roleList}" var="role">
+                            <%/** array.contain方法，如果包含则返回true */%>
+                            <option value="${role.id}" ${array.contain(userRoleIds, role.id)?'selected'}>${role.name}(${role.code})</option>
+                            </:for>
+                        </select>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                        lay-filter="user-edit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="pear-btn pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['form', 'jquery', 'laydate', 'select'], function() {
+            let form = layui.form;
+            let $ = layui.jquery;
+            let laydate = layui.laydate;
+            let select = layui.select;
+
+            let MODULE_PATH = "/system/user";
+
+            /****************************************** 组件渲染区 *****************************************************/
+            // 渲染时间选择组件
+            laydate.render({
+                elem: '#birthday'
+            });
+
+            /****************************************** 事件监听区 *****************************************************/
+            /** 账号输入框失去焦点事件 */
+            $('#account').blur(function () {
+                let that = this;
+                let value = $(this).val();
+                let field = $(this).attr('name');
+                let id = $('#id').val();
+                if (!value) {  return; }
+
+                // 验证字段是否存在
+                window.existence(that, {field: field, value: value, id: id});
+            });
+
+            /** 表单提交事件监听 */
+            form.on('submit(user-edit)', function(data) {
+                // 参数校验
+                data.field.roleIds = select.value('role', 'val');
+
+                // 表单提交
+                window.submit(data);
+                return false;
+            });
+
+            /****************************************** 功能方法区 *****************************************************/
+            /**
+             * 验证字段是否存在
+             *
+             * @param that
+             * @param data "{field: 'name', value: 123, id: 123456}"
+             */
+            window.existence = function (that, data) {
+                $.ajax({
+                    url: MODULE_PATH + '/existence',
+                    type: 'POST',
+                    data: JSON.stringify(data),
+                    contentType: 'application/json',
+                    success: function (rsp) {
+                        if (rsp.data) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 });
+                            $(that).val("");
+                        }
+                    },
+                    error: function (error) {
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                        $(that).val("");
+                    }
+                });
+            }
+
+            /** 表单提交 */
+            window.submit = function (data) {
+                let loadIndex = layer.load(2);
+                $.ajax({
+                    url: MODULE_PATH,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data.field),
+                    success: function(rsp) {
+                        layer.close(loadIndex);
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 });
+                            return;
+                        }
+
+                        layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                            // 关闭当前页
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            parent.layui.table.reload("user-table");
+                        });
+                    },
+                    error: function (error) {
+                        layer.close(loadIndex);
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>

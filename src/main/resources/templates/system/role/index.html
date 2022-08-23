@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="角色管理"/>
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">角色名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="name" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">角色编码</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="code" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">描述</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="describe" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="role-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="role-table" lay-filter="role-table"></table>
+        </div>
+    </div>
+
+    <!-- 表格操作列 -->
+    <script type="text/html" id="role-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            新增
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+        </button>
+    </script>
+    <!-- 表头操作列 -->
+    <script type="text/html" id="role-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit">编辑</button>
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove">删除</button>
+        <button class="pear-btn pear-btn-warming pear-btn-sm" lay-event="auth">分配权限</button>
+    </script>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['table', 'form', 'jquery', 'drawer', 'common', 'dtree'], function() {
+            let $ = layui.jquery;
+            let table = layui.table;
+            let form = layui.form;
+            let common = layui.common;
+            let drawer = layui.drawer;
+            let dtree = layui.dtree;
+
+            let MODULE_PATH = "/system/role";
+
+            /** 表格字段 */
+            let cols = [
+                [
+                    { type: 'checkbox' },
+                    { title: '角色名', field: 'name', align: 'center' },
+                    { title: '角色编码', field: 'code', align: 'center', sort: true },
+                    { title: '描述', field: 'describe', align: 'center' },
+                    { title: '修改时间', field: 'updateTime', align: 'center' },
+                    { title: '操作', toolbar: '#role-bar', align: 'center', fixed: common.isModile() ? null : 'right', minWidth: 220 }
+                ]
+            ]
+
+            /****************************************** 组件渲染区 *****************************************************/
+
+            /** 表格渲染 */
+            table.render({
+                elem: '#role-table',
+                url: MODULE_PATH+"/page",
+                page: true,
+                autoSort: false,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#role-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports']
+            });
+
+
+            /****************************************** 事件监听区 *****************************************************/
+
+            /** 表格操作栏点击事件监听 */
+            table.on('tool(role-table)', function(obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                } else if (obj.event === 'auth') {
+                    window.authConfig(obj);
+                }
+            });
+
+            /** 表头工具栏点击事件监听 */
+            table.on('toolbar(role-table)', function(obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            /** 表格排序监听 */
+            table.on('sort(role-table)', function (obj) {
+                table.reload('role-table', {
+                    initSort: obj,
+                    where: {
+                        sort: obj.type ? obj.field : '',
+                        order: obj.type
+                    }
+                });
+            });
+
+            /** 条件搜索监听 */
+            form.on('submit(role-query)', function(data) {
+                table.reload('role-table', {
+                    where: data.field,
+                    page: {curr: 1}
+                })
+                return false;
+            });
+
+
+            /****************************************** 功能方法区 *****************************************************/
+
+            /** 表格刷新 */
+            window.refresh = function(param) {
+                table.reload('role-table');
+            }
+
+            /** 打开新增弹窗 */
+            window.add = function() {
+                drawer.open({
+                    legacy: false,
+                    title: '新增',
+                    iframe: MODULE_PATH + '/add',
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '30%',
+                    closeBtn: 1,
+                });
+            }
+
+            /** 打开修改弹窗 */
+            window.edit = function(obj) {
+                drawer.open({
+                    legacy: false,
+                    title: '修改',
+                    iframe: MODULE_PATH + '/edit?id=' + obj.data['id'] + '&t='+ new Date().getTime(),
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '30%',
+                    closeBtn: 1,
+                });
+            }
+
+            /** 打开删除弹窗 */
+            window.remove = function(obj) {
+                layer.confirm('确定要删除该角色吗？', { icon: 3, title: '提示' }, function(index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/remove",
+                        type: 'delete',
+                        data: {id: obj.data['id']},
+                        success: function(rsp) {
+                            layer.close(loading);
+                            if (rsp.code !== 200) {
+                                layer.msg(rsp.message, { icon: 2, time: 1000 });
+                                return;
+                            }
+                            layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                                window.refresh();
+                            });
+                        },
+                        error: function (error) {
+                            layer.close(loading);
+                            if (error.responseJSON) {
+                                layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                            }
+                        }
+                    });
+                });
+            }
+
+            /** 打开批量删除弹窗 */
+            window.batchRemove = function(obj) {
+                let checkIds = common.checkField(obj, 'id');
+                if (checkIds === "") {
+                    layer.msg("未选中数据", { icon: 3, time: 1000 });
+                    return false;
+                }
+                let ids = checkIds.split(",");
+                layer.confirm('确定要删除这些角色吗？', { icon: 3, title: '提示' }, function(index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/batchRemove",
+                        type: 'delete',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids),
+                        success: function(rsp) {
+                            layer.close(loading);
+                            if (rsp.code !== 200) {
+                                layer.msg(rsp.message, { icon: 2, time: 1000 });
+                                return;
+                            }
+                            layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                                window.refresh();
+                            });
+                        },
+                        error: function (error) {
+                            layer.close(loading);
+                            if (error.responseJSON) {
+                                layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                            }
+                        }
+                    });
+                });
+            }
+
+            /** 打开分配权限弹窗 */
+            window.authConfig = function (obj) {
+                drawer.open({
+                    legacy: false,
+                    title: '分配权限',
+                    iframe: MODULE_PATH + '/auth?id=' + obj.data['id'] + '&t='+ new Date().getTime(),
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '30%',
+                    closeBtn: 1,
+                });
+            }
+        })
+    </script>
+</body>
+</html>

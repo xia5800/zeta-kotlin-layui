@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="修改密码"/>
+</head>
+<body>
+    <!-- 新增表单 -->
+    <form class="layui-form" action="">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">旧密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="oldPwd" lay-verify="required" autocomplete="off" placeholder="请输入旧密码"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">新密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="newPwd" lay-verify="required" autocomplete="off" placeholder="请输入新密码"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">确认密码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="confirmPwd" lay-verify="required" autocomplete="off" placeholder="请输入新密码"
+                               class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                        lay-filter="user-update">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="pear-btn pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['form', 'jquery'], function() {
+            let $ = layui.jquery;
+            let form = layui.form;
+
+            /** 表单提交事件监听 */
+            form.on('submit(user-update)', function(data) {
+                // 参数校验
+                if (data.field.confirmPwd !== data.field.newPwd) {
+                    layer.msg("两次密码输入不一致", { icon: 2, time: 1000 });
+                    return false;
+                }
+
+                let loadIndex = layer.load(2);
+                $.ajax({
+                    url: '/system/user/changePwd',
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data.field),
+                    success: function (rsp){
+                        layer.close(loadIndex);
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 });
+                            return;
+                        }
+
+                        layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                            // 关闭当前页
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                        });
+                    },
+                    error: function (error) {
+                        layer.close(loadIndex);
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                })
+                return false;
+            });
+        })
+    </script>
+</body>
+</html>

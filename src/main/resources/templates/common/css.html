@@ -1,0 +1,33 @@
+<%/*
+使用方法：
+<:include file="./common/css.html" title="主页" loading="true" admin="true"/>
+参数说明：
+title: 页面标题的名字  默认：主页
+loading: 是否引入loading.css 默认：false
+admin: 是否引入admin.css 默认：false
+*/%>
+<%/*这里是注释，注释内容不生效。只是为了让下面的缩进显得合理才加的
+<html lang="zh">
+<head>
+*/%>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="/favicon.ico" rel="icon">
+    <title>${title!"主页"}</title>
+
+    <!-- 依 赖 样 式 -->
+    <link rel="stylesheet" href="/assets/component/pear/css/pear.css" />
+    <link rel="stylesheet" href="/assets/css/zeta.css" />
+    <:if test="${parseBoolean(loading!false)}">
+    <!-- 加 载 样 式 -->
+    <link rel="stylesheet" href="/assets/css/loader.css" />
+    </:if>
+    <:if test="${parseBoolean(admin!false)}">
+    <!-- 布 局 样 式 -->
+    <link rel="stylesheet" href="/assets/css/admin.css" />
+    </:if>
+<%/*这里是注释，注释内容不生效。只是为了让上面的缩进显得合理才加的
+</head>
+</html>
+*/%>

@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="编辑菜单"/>
+</head>
+<body>
+    <form class="layui-form" action="">
+        <input type="hidden" name="id" value="${menu.id!}">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">上级菜单</label>
+                    <div class="layui-input-block">
+                        <select name="parentId" xm-select="parent" xm-select-radio>
+                            <option value=""></option>
+                        </select>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">菜单名称</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="title" value="${menu.title!}" id="title" lay-verify="required" autocomplete="off"
+                               placeholder="请输入菜单名称" class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">图标</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="icon" value="${menu.icon!}" id="iconPicker" lay-filter="iconPicker" class="hide">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">排序</label>
+                    <div class="layui-input-block">
+                        <input type="number" name="sortValue" value="${menu.sortValue!}" lay-verify="required" autocomplete="off" placeholder="请输入邮箱"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">菜单类型</label>
+                    <div class="layui-input-block">
+                        <input type="radio" name="type" value="0" title="目录" lay-filter="type-radio" ${menu.type! == 0? 'checked' : ''}>
+                        <input type="radio" name="type" value="1" title="菜单" lay-filter="type-radio" ${menu.type! == 1? 'checked' : ''}>
+                        <input type="radio" name="type" value="2" title="按钮" lay-filter="type-radio" ${menu.type! == 2? 'checked' : ''}>
+                    </div>
+                </div>
+                <!-- 如果是按钮才显示 -->
+                <div class="layui-form-item" id="authorityDiv" style="${menu.type != 2? 'display: none' : ''}">
+                    <label class="layui-form-label layui-form-required">按钮权限</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="authority" value="${menu.authority!}" autocomplete="off"
+                               placeholder="请输入按钮权限" class="layui-input">
+                    </div>
+                </div>
+                <!-- 菜单才显示 -->
+                <div class="layui-form-item" id="openTypeDiv" style="${menu.type != 1? 'display: none' : ''}">
+                    <label class="layui-form-label layui-form-required">打开方式</label>
+                    <div class="layui-input-block">
+                        <select name="openType">
+                            <option value="_iframe" ${menu.openType=='_iframe'?'selected'}>正常打开（_iframe）</option>
+                            <option value="_blank" ${menu.openType=='_blank'?'selected'}>新建浏览器标签页（_blank）</option>
+                        </select>
+                    </div>
+                </div>
+                <!-- 菜单才显示 -->
+                <div class="layui-form-item" id="hrefDiv" style="${menu.type != 1? 'display: none' : ''}">
+                    <label class="layui-form-label layui-form-required">菜单地址</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="href" value="${menu.href!}" autocomplete="off"
+                               placeholder="请输入菜单地址" class="layui-input">
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                        lay-filter="menu-edit">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="pear-btn pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['iconPicker', 'form', 'jquery', 'select'], function() {
+            let iconPicker = layui.iconPicker;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let select = layui.select;
+            let parentId = '${menu.parentId!""}'
+
+            let MODULE_PATH = "/system/menu";
+
+            /****************************************** 组件渲染区 *****************************************************/
+            // 渲染图标选择组件
+            iconPicker.render({
+                elem: '#iconPicker',
+                type: 'fontClass',
+                search: true,
+                page: true,
+                limit: 16
+            });
+
+            // 渲染菜单树
+            select.data('parent', 'server', {
+                url: MODULE_PATH + '/selectTree?excludeAuthority=true',
+                beforeSuccess: function (id, url, searchVal, result) {
+                    // 开始渲染。在返回结果外面再包裹一层父级
+                    result = [{
+                        name: "父级",
+                        value: "0",
+                        children: result.data,
+                        selected: parentId === "0"
+                    }]
+                    return result
+                },
+                success: function (id, url, searchVal, result) {
+                    // 渲染完毕。赋值
+                    select.value('parent', [parentId]);
+                }
+            });
+
+            /****************************************** 事件监听区 *****************************************************/
+            /** radio切换监听 */
+            form.on('radio(type-radio)', function(data){
+                if (data.value === '0') {
+                    // 目录
+                    $("#authorityDiv").hide();
+                    $("#openTypeDiv").hide();
+                    $("#hrefDiv").hide();
+                } else if (data.value === '1') {
+                    // 菜单
+                    $("#authorityDiv").hide();
+                    $("#openTypeDiv").show();
+                    $("#hrefDiv").show();
+                } else if (data.value === '2') {
+                    // 按钮
+                    $("#authorityDiv").show();
+                    $("#openTypeDiv").hide();
+                    $("#hrefDiv").hide();
+                }
+            });
+
+            /** 表单提交事件监听 */
+            form.on('submit(menu-edit)', function(data) {
+                // 参数校验
+                let type = data.field.type;
+                if (type === '0') {
+                    data.field.href = ''
+                    data.field.authority = ''
+                    data.field.openType = ''
+                }
+                if (type === '1') {
+                    if (!data.field.href || !data.field.openType) {
+                        layer.msg("必填项不能为空", { icon:2, time: 1000});
+                        return false;
+                    }
+                    data.field.authority = ''
+                }
+                if (type === '2') {
+                    if (!data.field.authority) {
+                        layer.msg("必填项不能为空", { icon:2, time: 1000});
+                        return false;
+                    }
+                    data.field.openType = ''
+                    data.field.href = ''
+                }
+
+                // 表单提交
+                window.submit(data);
+                return false;
+            });
+
+            /****************************************** 功能方法区 *****************************************************/
+            /** 表单提交 */
+            window.submit = function (data) {
+                let loadIndex = layer.load(2);
+                $.ajax({
+                    url: MODULE_PATH,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data.field),
+                    success: function (rsp) {
+                        layer.close(loadIndex);
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 });
+                            return;
+                        }
+
+                        layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                            // 关闭当前页
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            parent.layui.treetable.reload("#menu-table");
+                        });
+                    },
+                    error: function (error) {
+                        layer.close(loadIndex);
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                });
+            }
+        })
+    </script>
+</body>
+</html>

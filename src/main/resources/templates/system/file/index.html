@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="文件管理"/>
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">业务类型</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="bizType" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">唯一文件名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="uniqueFileName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">原始文件名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="originalFileName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="file-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="file-table" lay-filter="file-table"></table>
+        </div>
+    </div>
+
+    <!-- 表头操作列 -->
+    <script type="text/html" id="file-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="drag">
+            <i class="layui-icon layui-icon-upload-drag"></i>
+            拖拽上传
+        </button>
+    </script>
+    <!-- 表格操作列 -->
+    <script type="text/html" id="file-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-xs" lay-event="download">下载</button>
+    </script>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['table', 'form', 'jquery', 'upload', 'toast', 'util', 'common'], function() {
+            let $ = layui.jquery;
+            let table = layui.table;
+            let form = layui.form;
+            let upload = layui.upload;
+            let toast = layui.toast;
+            let util = layui.util;
+            let common = layui.common;
+
+            let MODULE_PATH = "/system/file";
+
+            /** 表格字段 */
+            let cols = [
+                [
+                    { title: '业务类型', field: 'bizType', align: 'center', width: 120 },
+                    { title: '桶', field: 'bucket', align: 'center', width: 120, hide: true },
+                    { title: '存储类型', field: 'storageType', align: 'center', width: 120 },
+                    { title: '文件相对地址', field: 'path', align: 'center', hide: true },
+                    { title: '文件访问地址', field: 'url', align: 'center', templet: function (d) {
+                        return '<a href="'+d.url+'" target="_blank">' + d.url + "</a>"
+                    }},
+                    { title: '唯一文件名', field: 'uniqueFileName', align: 'center', width: 180 },
+                    { title: '原始文件名', field: 'originalFileName', align: 'center', width: 180, templet: function (d) {
+                        return util.escape(d.originalFileName);
+                    } },
+                    { title: '文件类型', field: 'fileType', align: 'center', hide: true },
+                    { title: '内容类型', field: 'contentType', align: 'center', hide: true },
+                    { title: '后缀', field: 'suffix', align: 'center', hide: true },
+                    { title: '文件大小', field: 'size', align: 'center', width: 120, templet: function (d){
+                        return Math.ceil(parseInt(d.size) / 1024) + 'kb'
+                    } },
+                    { title: '上传时间', field: 'createTime', align: 'center', width: 180, sort: true },
+                    { title: '操作', toolbar: '#file-bar', align: 'center', width: 120, fixed: common.isModile() ? null : 'right' }
+                ]
+            ]
+
+            /****************************************** 组件渲染区 *****************************************************/
+            /** 表格渲染 */
+            table.render({
+                elem: '#file-table',
+                url: MODULE_PATH+"/page",
+                page: true,
+                autoSort: false,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#file-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports']
+            });
+
+
+            /****************************************** 事件监听区 *****************************************************/
+            /** 表格操作栏点击事件监听 */
+            table.on('tool(file-table)', function(obj) {
+                if (obj.event === 'download') {
+                    window.open(MODULE_PATH+'/download?id='+obj.data['id']);
+                }
+            });
+
+            /** 表头工具栏点击事件监听 */
+            table.on('toolbar(file-table)', function(obj) {
+                if (obj.event === 'drag') {
+                    window.dragUpload();
+                }
+            });
+
+            /** 表格排序监听 */
+            table.on('sort(file-table)', function (obj) {
+                table.reload('file-table', {
+                    initSort: obj,
+                    where: {
+                        sort: obj.type ? obj.field : '',
+                        order: obj.type
+                    }
+                });
+            });
+
+            /** 条件搜索监听 */
+            form.on('submit(file-query)', function(data) {
+                table.reload('file-table', {
+                    where: data.field,
+                    page: {curr: 1}
+                })
+                return false;
+            });
+
+            /****************************************** 功能方法区 *****************************************************/
+            /** 表格刷新 */
+            window.refresh = function(param) {
+                table.reload('file-table');
+            }
+
+            /** 打开拖拽上传弹窗 */
+            window.dragUpload = function () {
+                layer.open({
+                    type: 1,
+                    title: '拖拽上传',
+                    content: '<div class="layui-text" style="padding: 20px; text-align: center">\n' +
+                        '        <div id="fileUploadDrag" class="layui-upload-drag">\n' +
+                        '            <i class="layui-icon layui-icon-upload-drag"></i>\n' +
+                        '            <p>点击上传，或将文件拖拽到此处</p>\n' +
+                        '        </div>\n' +
+                        '    </div>',
+                    area: ["400px", "280px"],
+                    success: function (layero, dIndex) {
+                        /** 文件上传按钮渲染 */
+                        upload.render({
+                            elem: '#fileUploadDrag',
+                            url: MODULE_PATH + '/upload?bizType=file',
+                            accept: 'file',
+                            before: function () {
+                                layer.load(2);
+                            },
+                            done: function(rsp){
+                                layer.closeAll('loading');
+                                // 如果上传失败
+                                if(rsp.code !== 200){
+                                    toast.error({title: 'error', message: '文件上传失败', position: 'topCenter'});
+                                    return;
+                                }
+                                window.refresh();
+                                layer.close(dIndex);
+                            },
+                            error: function(){
+                                layer.closeAll('loading');
+                                toast.error({title: 'error', message: '文件上传失败', position: 'topCenter'});
+                            }
+                        });
+                    }
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>

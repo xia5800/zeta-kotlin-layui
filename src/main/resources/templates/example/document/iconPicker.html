@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="图标选择"/>
+</head>
+<body class="pear-container">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">开发环境</div>
+                <div class="layui-card-body">
+                    IconPicker 提供图标选择功能
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">显示代码</h2>
+                    <div class="layui-colla-content">
+                        <pre class="layui-code" lay-encode="true">
+<link rel="stylesheet" href="/assets/component/pear/css/pear.css" />
+并
+<script src="/assets/component/layui/layui.js"></script>
+并
+<script src="/assets/component/pear/pear.js"></script>
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    默认图标
+                </div>
+                <div class="layui-card-body">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-input-inline">
+                                <input type="text" id="iconPicker" value="layui-icon-face-smile" lay-filter="iconPicker" class="hide">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">显示代码</h2>
+                    <div class="layui-colla-content">
+                        <pre class="layui-code" lay-encode="true">
+layui.use(['iconPicker'], function() {
+    var iconPicker = layui.iconPicker;
+
+    iconPicker.render({
+        elem: '#iconPicker',
+        type: 'fontClass',
+        search: true,
+        page: true,
+        limit: 16,
+        click: function(data) {
+           console.log(data);
+        },
+        success: function(d) {
+            console.log(d);
+        }
+    });
+
+});
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">默认选中</div>
+                <div class="layui-card-body">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-input-inline">
+                                <input type="text" id="iconPicker2" value="layui-icon-face-smile-fine" lay-filter="iconPicker2">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">显示代码</h2>
+                    <div class="layui-colla-content">
+                        <pre class="layui-code" lay-encode="true">
+layui.use(['iconPicker'], function() {
+    var iconPicker = layui.iconPicker;
+
+    iconPicker.render({
+        elem: '#iconPicker2',
+        type: 'fontClass',
+        search: true,
+        page: true,
+        limit: 16,
+        click: function(data) {
+           console.log(data);
+        },
+        success: function(d) {
+            console.log(d);
+        }
+    });
+
+});
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-card">
+                <div class="layui-card-header">不分页</div>
+                <div class="layui-card-body">
+                    <div class="layui-form">
+                        <div class="layui-form-item">
+                            <div class="layui-input-inline">
+                                <input type="text" id="iconPicker3" value="layui-icon-face-smile-fine" lay-filter="iconPicker3">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md12">
+            <div class="layui-collapse">
+                <div class="layui-colla-item">
+                    <h2 class="layui-colla-title">显示代码</h2>
+                    <div class="layui-colla-content">
+                        <pre class="layui-code" lay-encode="true">
+layui.use(['iconPicker'], function() {
+    var iconPicker = layui.iconPicker;
+
+    iconPicker.render({
+        elem: '#iconPicker',
+        type: 'fontClass',
+        search: true,
+        page: false,
+        limit: 16,
+        click: function(data) {
+           console.log(data);
+        },
+        success: function(d) {
+            console.log(d);
+        }
+    });
+
+});
+                        </pre>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['iconPicker', 'form', 'layer', 'code','element'], function() {
+            var iconPicker = layui.iconPicker,
+                form = layui.form,
+                layer = layui.layer,
+                $ = layui.$;
+
+            layui.code({ encode: true  });
+
+            iconPicker.render({
+                // 选择器，推荐使用input
+                elem: '#iconPicker',
+                // 数据类型：fontClass/unicode，推荐使用fontClass
+                type: 'fontClass',
+                // 是否开启搜索：true/false，默认true
+                search: true,
+                // 是否开启分页：true/false，默认true
+                page: true,
+                // 每页显示数量，默认12
+                limit: 16,
+                // 点击回调
+                click: function(data) {
+                    console.log(data);
+                },
+                // 渲染成功后的回调
+                success: function(d) {
+                    console.log(d);
+                }
+            });
+
+            iconPicker.render({
+                // 选择器，推荐使用input
+                elem: '#iconPicker2',
+                // 数据类型：fontClass/unicode，推荐使用fontClass
+                type: 'fontClass',
+                // 是否开启搜索：true/false
+                search: true,
+                // 是否开启分页
+                page: true,
+                // 每页显示数量，默认12
+                limit: 16,
+                // 点击回调
+                click: function(data) {
+                    console.log(data);
+                },
+                // 渲染成功后的回调
+                success: function(d) {
+                    console.log(d);
+                }
+            });
+
+            iconPicker.render({
+                // 选择器，推荐使用input
+                elem: '#iconPicker3',
+                // 数据类型：fontClass/unicode，推荐使用fontClass
+                type: 'fontClass',
+                // 是否开启搜索：true/false
+                search: true,
+                // 是否开启分页
+                page: false,
+                // 每页显示数量，默认12
+                limit: 16,
+                // 点击回调
+                click: function(data) {
+                    console.log(data);
+                },
+                // 渲染成功后的回调
+                success: function(d) {
+                    console.log(d);
+                }
+            });
+        });
+    </script>
+</body>
+</html>

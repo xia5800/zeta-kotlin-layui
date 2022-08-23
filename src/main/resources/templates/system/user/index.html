@@ -1,0 +1,355 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="用户管理"/>
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">用户名</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="username" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">账号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="account" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">性别</label>
+                        <div class="layui-input-inline">
+                            <select name="sex">
+                                <option value=""></option>
+                                <option value="0">未知</option>
+                                <option value="1">男</option>
+                                <option value="2">女</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">邮箱</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="email" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="user-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="user-table" lay-filter="user-table"></table>
+        </div>
+    </div>
+
+    <!-- 表头操作列 -->
+    <script type="text/html" id="user-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            新增
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+        </button>
+    </script>
+    <!-- 表格操作列 -->
+    <script type="text/html" id="user-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-xs" lay-event="edit">编辑</button>
+        <button class="pear-btn pear-btn-danger pear-btn-xs" lay-event="remove">删除</button>
+        <button class="pear-btn pear-btn-warming pear-btn-xs" lay-event="restPwd">重置密码</button>
+    </script>
+
+    <!-- 用户状态：表格字段格式化 -->
+    <script type="text/html" id="user-state">
+        <input type="checkbox" name="state" value="{{d.id}}" lay-skin="switch" lay-text="正常|禁用" lay-filter="user-state" {{ d.state == 0 ? 'checked' : '' }} />
+    </script>
+    <!-- 用户性别：表格字段格式化 -->
+    <script type="text/html" id="user-sex">
+        {{#if (d.sex == 1) { }}
+        <span>男</span>
+        {{# }else if(d.sex == 2){ }}
+        <span>女</span>
+        {{# } }}
+    </script>
+    <!-- 创建时间：表格字段格式化 -->
+    <script type="text/html" id="user-createTime">
+        {{layui.util.toDateString(d.createTime, 'yyyy-MM-dd')}}
+    </script>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['table', 'form', 'jquery', 'drawer', 'common'], function() {
+            let $ = layui.jquery;
+            let table = layui.table;
+            let form = layui.form;
+            let common = layui.common;
+            let drawer = layui.drawer;
+
+            let MODULE_PATH = "/system/user";
+
+            /** 表格字段 */
+            let cols = [
+                [
+                    { type: 'checkbox' },
+                    { title: '用户名', field: 'username', align: 'center', width: 120, templet: function (d) {
+                        return d.readonly? '<i class="layui-icon layui-icon-rate-solid layui-bg-orange"/> ' + d.username : d.username
+                    } },
+                    { title: '账号', field: 'account', align: 'center', width: 100 },
+                    { title: '邮箱', field: 'email', align: 'center' },
+                    { title: '性别', field: 'sex', align: 'center', width: 80, sort: true, templet: '#user-sex' },
+                    { title: '电话', field: 'mobile', align: 'center' },
+                    { title: '生日', field: 'birthday', align: 'center' },
+                    { title: '角色', field: 'roles', align: 'center', templet: function (d){
+                        return d.roles.map(function (item){
+                            return '<span class="layui-badge layui-bg-gray">'+item.name+'</span>'
+                        });
+                    } },
+                    { title: '状态', field: 'state', align: 'center', templet: '#user-state' },
+                    { title: '注册时间', field: 'createTime', align: 'center', templet: '#user-createTime'},
+                    { title: '操作', toolbar: '#user-bar', align: 'center', fixed: common.isModile() ? null : 'right', minWidth: 220 }
+                ]
+            ]
+
+            /****************************************** 组件渲染区 *****************************************************/
+
+            /** 表格渲染 */
+            table.render({
+                elem: '#user-table',
+                url: MODULE_PATH+"/page",
+                page: true,
+                autoSort: false,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#user-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports']
+            });
+
+
+            /****************************************** 事件监听区 *****************************************************/
+
+            /** 表格操作栏点击事件监听 */
+            table.on('tool(user-table)', function(obj) {
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                } else if (obj.event === 'restPwd') {
+                    window.restPwd(obj);
+                }
+            });
+
+            /** 表头工具栏点击事件监听 */
+            table.on('toolbar(user-table)', function(obj) {
+                if (obj.event === 'add') {
+                    window.add();
+                } else if (obj.event === 'refresh') {
+                    window.refresh();
+                } else if (obj.event === 'batchRemove') {
+                    window.batchRemove(obj);
+                }
+            });
+
+            /** 表格排序监听 */
+            table.on('sort(user-table)', function (obj) {
+                table.reload('user-table', {
+                    initSort: obj,
+                    where: {
+                        sort: obj.type ? obj.field : '',
+                        order: obj.type
+                    }
+                });
+            });
+
+            /** 条件搜索监听 */
+            form.on('submit(user-query)', function(data) {
+                table.reload('user-table', {
+                    where: data.field,
+                    page: {curr: 1}
+                })
+                return false;
+            });
+
+            /** 修改用户状态监听 */
+            form.on('switch(user-state)', function(obj) {
+                let state = obj.elem.checked? 0 : 1;
+                window.changeState(this.value, state)
+            });
+
+
+            /****************************************** 功能方法区 *****************************************************/
+
+            /** 表格刷新 */
+            window.refresh = function(param) {
+                table.reload('user-table');
+            }
+
+            /** 打开新增弹窗 */
+            window.add = function() {
+                drawer.open({
+                    legacy: false,
+                    title: '新增',
+                    iframe: MODULE_PATH + '/add',
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '30%',
+                    closeBtn: 1,
+                });
+            }
+
+            /** 打开修改弹窗 */
+            window.edit = function(obj) {
+                drawer.open({
+                    legacy: false,
+                    title: '修改',
+                    iframe: MODULE_PATH + '/edit?id=' + obj.data['id'] + '&t='+ new Date().getTime(),
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '30%',
+                    closeBtn: 1,
+                });
+            }
+
+            /** 打开删除弹窗 */
+            window.remove = function(obj) {
+                layer.confirm('确定要删除该用户吗？', { icon: 3, title: '提示' }, function(index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/remove",
+                        type: 'delete',
+                        data: {id: obj.data['id']},
+                        success: function(rsp) {
+                            layer.close(loading);
+                            if (rsp.code !== 200) {
+                                layer.msg(rsp.message, { icon: 2, time: 1000 });
+                                return;
+                            }
+                            layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                                obj.del();
+                            });
+                        },
+                        error: function (error) {
+                            layer.close(loading);
+                            if (error.responseJSON) {
+                                layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                            }
+                        }
+                    });
+                });
+            }
+
+            /** 打开批量删除弹窗 */
+            window.batchRemove = function(obj) {
+                let checkIds = common.checkField(obj, 'id');
+                if (checkIds === "") {
+                    layer.msg("未选中数据", { icon: 3, time: 1000 });
+                    return false;
+                }
+                let ids = checkIds.split(",");
+                layer.confirm('确定要删除这些用户吗？', { icon: 3, title: '提示' }, function(index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/batchRemove",
+                        type: 'delete',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids),
+                        success: function(rsp) {
+                            layer.close(loading);
+                            if (rsp.code !== 200) {
+                                layer.msg(rsp.message, { icon: 2, time: 1000 });
+                                return;
+                            }
+                            layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                                window.refresh();
+                            });
+                        },
+                        error: function (error) {
+                            layer.close(loading);
+                            if (error.responseJSON) {
+                                layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                            }
+                        }
+                    });
+                });
+            }
+
+            /**
+             * 修改用户状态
+             * @param id    用户id
+             * @param state int 状态：0,1
+             */
+            window.changeState = function (id, state) {
+                $.ajax({
+                    url: MODULE_PATH+'/state',
+                    type: 'PUT',
+                    data: JSON.stringify({id: id, state: state}),
+                    contentType: 'application/json',
+                    success: function (rsp) {
+                        layer.msg(rsp.message, { icon: rsp.code !== 200? 2 : 1, time: 1000 }, function () {
+                            if (rsp.code !== 200) {
+                                window.refresh();
+                            }
+                        });
+                    },
+                    error: function (error) {
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                        window.refresh();
+                    }
+                });
+            }
+
+            /** 重置密码 */
+            window.restPwd = function (obj) {
+                layer.confirm('确定要重置该用户的密码为[123456]吗？', { icon: 3, title: '提示' }, function(index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/restPwd",
+                        type: 'PUT',
+                        data: JSON.stringify({id: obj.data['id'], password: '123456'}),
+                        contentType: 'application/json',
+                        success: function(rsp) {
+                            layer.close(loading);
+                            if (rsp.code !== 200) {
+                                layer.msg(rsp.message, { icon: 2, time: 1000 });
+                                return;
+                            }
+                            layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                                window.refresh();
+                            });
+                        },
+                        error: function (error) {
+                            if (error.responseJSON) {
+                                layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                            }
+                            layer.close(loading);
+                        }
+                    });
+                });
+            }
+        })
+    </script>
+</body>
+</html>

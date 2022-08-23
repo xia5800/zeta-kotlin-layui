@@ -1,0 +1,89 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.zeta.system.dao.SysMenuMapper">
+
+    <!-- 通用查询映射结果 -->
+    <resultMap id="BaseResultMap" type="com.zeta.system.model.entity.SysMenu">
+        <id column="id" jdbcType="BIGINT" property="id" />
+        <result column="create_time" jdbcType="TIMESTAMP" property="createTime" />
+        <result column="created_by" jdbcType="BIGINT" property="createdBy" />
+        <result column="update_time" jdbcType="TIMESTAMP" property="updateTime" />
+        <result column="updated_by" jdbcType="BIGINT" property="updatedBy" />
+        <result column="title" jdbcType="VARCHAR" property="title" />
+        <result column="parent_id" jdbcType="BIGINT" property="parentId" />
+        <result column="sort_value" jdbcType="INTEGER" property="sortValue" />
+        <result column="icon" jdbcType="VARCHAR" property="icon" />
+        <result column="authority" jdbcType="VARCHAR" property="authority" />
+        <result column="type" jdbcType="VARCHAR" property="type" />
+        <result column="deleted" jdbcType="BIT" property="deleted" />
+        <result column="open_type" jdbcType="VARCHAR" property="openType" />
+        <result column="href" jdbcType="VARCHAR" property="href" />
+    </resultMap>
+
+    <!-- 表名 -->
+    <sql id="TABLE_NAME">
+        sys_menu
+    </sql>
+
+    <!-- 通用查询结果列 -->
+    <sql id="Base_Column_List">
+        id, create_time, created_by, update_time, updated_by, title, parent_id, sort_value,
+        icon, authority, type, deleted, open_type, href
+    </sql>
+
+    <!-- 用法：<include refid="SYS_MENU_JOIN_COLUMN_LIST"><property name="tableName" value="t1"/></include>, -->
+    <!-- 关联查询字段列 -->
+    <sql id="SYS_MENU_JOIN_COLUMN_LIST">
+        ${tableName}.id, ${tableName}.create_time, ${tableName}.created_by, ${tableName}.update_time, ${tableName}.updated_by, ${tableName}.title, ${tableName}.parent_id, ${tableName}.sort_value,
+        ${tableName}.icon, ${tableName}.authority, ${tableName}.type, ${tableName}.deleted, ${tableName}.open_type, ${tableName}.href
+    </sql>
+
+    <!-- 通用查询条件 -->
+    <sql id="Base_Where">
+        <where>
+            <if test="param.id != null and param.id != ''">
+                AND id = #{param.id}
+            </if>
+            <if test="param.createTime != null and param.createTime != ''">
+                AND create_time = #{param.createTime}
+            </if>
+            <if test="param.createdBy != null and param.createdBy != ''">
+                AND created_by = #{param.createdBy}
+            </if>
+            <if test="param.updateTime != null and param.updateTime != ''">
+                AND update_time = #{param.updateTime}
+            </if>
+            <if test="param.updatedBy != null and param.updatedBy != ''">
+                AND updated_by = #{param.updatedBy}
+            </if>
+            <if test="param.title != null and param.title != ''">
+                AND title LIKE CONCAT('%', #{param.title}, '%')
+            </if>
+            <if test="param.parentId != null and param.parentId != ''">
+                AND parent_id = #{param.parentId}
+            </if>
+            <if test="param.sortValue != null and param.sortValue != ''">
+                AND sort_value = #{param.sortValue}
+            </if>
+            <if test="param.icon != null and param.icon != ''">
+                AND icon LIKE CONCAT('%', #{param.icon}, '%')
+            </if>
+            <if test="param.authority != null and param.authority != ''">
+                AND authority LIKE CONCAT('%', #{param.authority}, '%')
+            </if>
+            <if test="param.type != null and param.type != ''">
+                AND type = #{param.type}
+            </if>
+            <if test="param.deleted != null and param.deleted != ''">
+                AND deleted = #{param.deleted}
+            </if>
+            <if test="param.openType != null and param.openType != ''">
+                AND open_type = #{param.openType}
+            </if>
+            <if test="param.href != null and param.href != ''">
+                AND href LIKE CONCAT('%', #{param.href}, '%')
+            </if>
+        </where>
+    </sql>
+
+</mapper>

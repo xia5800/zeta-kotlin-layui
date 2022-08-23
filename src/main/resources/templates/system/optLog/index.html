@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="操作日志"/>
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">操作类型</label>
+                        <div class="layui-input-inline">
+                            <select name="type">
+                                <option value=""></option>
+                                <option value="OPERATION">操作日志</option>
+                                <option value="EXCEPTION">异常日志</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">操作人</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="userName" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">操作描述</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="description" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">操作时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="crateTimeRange">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="optLog-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="optLog-table" lay-filter="optLog-table"></table>
+        </div>
+    </div>
+
+    <!-- 表格操作列 -->
+    <script type="text/html" id="optLog-toolbar">
+        <span>操作日志</span>
+    </script>
+    <!-- 表头操作列 -->
+    <script type="text/html" id="optLog-bar" >
+        <button class="pear-btn pear-btn-primary pear-btn-xs" lay-event="detail">详情</button>
+    </script>
+
+    <!-- 操作日志类型：表格字段格式化 -->
+    <script type="text/html" id="optLog-type" >
+        {{#if (d.type == 'OPERATION') { }}
+        <span>操作日志</span>
+        {{# }else if(d.type == 'EXCEPTION'){ }}
+        <span>异常日志</span>
+        {{# } }}
+    </script>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['table', 'form', 'jquery', 'laydate', 'drawer', 'common'], function() {
+            let $ = layui.jquery;
+            let table = layui.table;
+            let form = layui.form;
+            let laydate = layui.laydate;
+            let common = layui.common;
+            let drawer = layui.drawer;
+
+            let MODULE_PATH = "/system/optLog";
+
+            /** 表格字段 */
+            let cols = [
+                [
+                    { title: '操作类型', field: 'type', align: 'center', sort: true, width: 100, templet: '#optLog-type' },
+                    { title: '操作人', field: 'userName', align: 'center', sort: true, width: 100 },
+                    { title: '操作描述', field: 'description', align: 'center', width: 140 },
+                    { title: '请求地址', field: 'url', align: 'center', width: 200 },
+                    { title: '请求方式', field: 'httpMethod', align: 'center', sort: true, width: 100 },
+                    { title: '类路径', field: 'classPath', align: 'center' },
+                    { title: '消耗时间', field: 'spendTime', align: 'center', width: 120, templet: function (d) {
+                        return (parseInt(d.spendTime) / 1000) + 's'
+                    } },
+                    { title: '操作系统', field: 'os', align: 'center', hide: true },
+                    { title: '设备名称', field: 'device', align: 'center', hide: true },
+                    { title: '浏览器类型', field: 'browser', align: 'center', hide: true },
+                    { title: 'ip地址', field: 'ip', align: 'center', width: 100 },
+                    { title: '操作时间', field: 'createTime', align: 'center', sort: true , width: 180 },
+                    { title: '操作', toolbar: '#optLog-bar', align: 'center', fixed: common.isModile() ? null : 'right', width: 80 }
+                ]
+            ]
+
+            /****************************************** 组件渲染区 *****************************************************/
+
+            /** 表格渲染 */
+            table.render({
+                elem: '#optLog-table',
+                url: MODULE_PATH+"/page",
+                page: true,
+                autoSort: false,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#optLog-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports']
+            });
+
+            /** 日期时间渲染 */
+            laydate.render({
+                elem: '#crateTimeRange',
+                type: 'datetime',
+                range: true
+            });
+
+            /****************************************** 事件监听区 *****************************************************/
+
+            /** 表格操作栏点击事件监听 */
+            table.on('tool(optLog-table)', function(obj) {
+                if (obj.event === 'detail') {
+                    window.detail(obj);
+                }
+            });
+
+            /** 表头工具栏点击事件监听 */
+            table.on('toolbar(optLog-table)', function(obj) {
+                if (obj.event === 'refresh') {
+                    window.refresh();
+                }
+            });
+
+            /** 表格排序监听 */
+            table.on('sort(optLog-table)', function (obj) {
+                table.reload('optLog-table', {
+                    initSort: obj,
+                    where: {
+                        sort: obj.type ? obj.field : '',
+                        order: obj.type
+                    }
+                });
+            });
+
+            /** 条件搜索监听 */
+            form.on('submit(optLog-query)', function(data) {
+                let timeRange = $('#crateTimeRange').val();
+                if (timeRange) {
+                    let range = timeRange.split(' - ')
+                    data.field.createTimeStart = range[0]
+                    data.field.createTimeEnd = range[1]
+                }
+                table.reload('optLog-table', {
+                    where: data.field,
+                    page: {curr: 1}
+                })
+                return false;
+            });
+
+
+            /****************************************** 功能方法区 *****************************************************/
+
+            /** 表格刷新 */
+            window.refresh = function(param) {
+                table.reload('optLog-table');
+            }
+
+            /** 打开详情弹窗 */
+            window.detail = function (obj) {
+                drawer.open({
+                    legacy: false,
+                    title: '详情',
+                    iframe: MODULE_PATH + '/detail?id=' + obj.data['id'] + '&t='+ new Date().getTime(),
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '70%',
+                    closeBtn: 1,
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>

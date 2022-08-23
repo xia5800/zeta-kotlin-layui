@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="折线图表"/>
+    <link rel="stylesheet" href="/assets/css/other/result.css" />
+</head>
+<body class="pear-container">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="line1" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="line2" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="line3" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="line4" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script src="/assets/data/script/line1.js"></script>
+    <script src="/assets/data/script/line2.js"></script>
+    <script src="/assets/data/script/line3.js"></script>
+    <script src="/assets/data/script/line4.js"></script>
+</body>
+</html>

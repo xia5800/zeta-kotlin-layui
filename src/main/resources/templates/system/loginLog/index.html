@@ -1,0 +1,174 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="登录日志"/>
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">状态</label>
+                        <div class="layui-input-inline">
+                            <select name="state">
+                                <option value=""></option>
+                                <option value="SUCCESS">SUCCESS</option>
+                                <option value="FAIL">FAIL</option>
+                                <option value="ERROR_PWD">ERROR_PWD</option>
+                                <option value="LOGOUT">LOGOUT</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">账号</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="account" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">备注</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="comments" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">登录时间</label>
+                        <div class="layui-input-inline">
+                            <input type="text" class="layui-input" id="crateTimeRange">
+                        </div>
+                    </div>
+
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="loginLog-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="loginLog-table" lay-filter="loginLog-table"></table>
+        </div>
+    </div>
+
+    <!-- 表格操作列 -->
+    <script type="text/html" id="loginLog-toolbar">
+        <span>登录日志</span>
+    </script>
+    <!-- 登录日志状态：表格字段格式化 -->
+    <script type="text/html" id="loginLog-state" >
+        {{#if (d.state == 'SUCCESS') { }}
+        <span>登录成功</span>
+        {{# }else if(d.state == 'FAIL'){ }}
+        <span>登录失败</span>
+        {{# }else if(d.state == 'ERROR_PWD'){ }}
+        <span>密码不正确</span>
+        {{# }else if(d.state == 'LOGOUT'){ }}
+        <span>注销登录</span>
+        {{# } }}
+    </script>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['table', 'form', 'jquery', 'laydate', 'common'], function() {
+            let $ = layui.jquery;
+            let table = layui.table;
+            let form = layui.form;
+            let laydate = layui.laydate;
+
+            let MODULE_PATH = "/system/loginLog";
+
+            /** 表格字段 */
+            let cols = [
+                [
+                    { type: 'checkbox' },
+                    { title: '状态', field: 'state', align: 'center', sort: true },
+                    { title: '账号', field: 'account', align: 'center' },
+                    { title: '备注', field: 'comments', align: 'center' },
+                    { title: '操作系统', field: 'os', align: 'center' },
+                    { title: '设备', field: 'device', align: 'center' },
+                    { title: '浏览器', field: 'browser', align: 'center' },
+                    { title: '登录ip', field: 'ip', align: 'center' },
+                    { title: '登录时间', field: 'createTime', align: 'center', sort: true }
+                ]
+            ]
+
+            /****************************************** 组件渲染区 *****************************************************/
+            /** 表格渲染 */
+            table.render({
+                elem: '#loginLog-table',
+                url: MODULE_PATH+"/page",
+                page: true,
+                autoSort: false,
+                cols: cols,
+                skin: 'line',
+                toolbar: '#loginLog-toolbar',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports']
+            });
+
+            /** 日期时间渲染 */
+            laydate.render({
+                elem: '#crateTimeRange',
+                type: 'datetime',
+                range: true
+            });
+
+            /****************************************** 事件监听区 *****************************************************/
+            /** 表头工具栏点击事件监听 */
+            table.on('toolbar(loginLog-table)', function(obj) {
+                if (obj.event === 'refresh') {
+                    window.refresh();
+                }
+            });
+
+            /** 表格排序监听 */
+            table.on('sort(loginLog-table)', function (obj) {
+                table.reload('loginLog-table', {
+                    initSort: obj,
+                    where: {
+                        sort: obj.type ? obj.field : '',
+                        order: obj.type
+                    }
+                });
+            });
+
+            /** 条件搜索监听 */
+            form.on('submit(loginLog-query)', function(data) {
+                let timeRange = $('#crateTimeRange').val();
+                if (timeRange) {
+                    let range = timeRange.split(' - ')
+                    data.field.createTimeStart = range[0]
+                    data.field.createTimeEnd = range[1]
+                }
+                table.reload('loginLog-table', {
+                    where: data.field,
+                    page: {curr: 1}
+                })
+                return false;
+            });
+
+
+            /****************************************** 功能方法区 *****************************************************/
+
+            /** 表格刷新 */
+            window.refresh = function(param) {
+                table.reload('loginLog-table');
+            }
+
+        });
+    </script>
+</body>
+</html>

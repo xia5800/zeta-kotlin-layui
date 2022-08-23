@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="编辑角色"/>
+</head>
+<body>
+    <form class="layui-form" action="">
+        <input type="hidden" id="id" name="id" value="${role.id}">
+        <div class="mainBox">
+            <div class="main-container">
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">角色名</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="name" value="${role.name!}" lay-verify="required" autocomplete="off" placeholder="请输入角色名"
+                               class="layui-input">
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label layui-form-required">角色编码</label>
+                    <div class="layui-input-block">
+                        <input type="text" name="code" value="${role.code!}" id="code" lay-verify="required" autocomplete="off" placeholder="请输入角色编码"
+                               class="layui-input" disabled readonly>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">描述</label>
+                    <div class="layui-input-block">
+                        <textarea name="describe" placeholder="请输入描述" class="layui-textarea">${role.describe!}</textarea>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="bottom">
+            <div class="button-container">
+                <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                        lay-filter="role-save">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button type="reset" class="pear-btn pear-btn-sm">
+                    <i class="layui-icon layui-icon-refresh"></i>
+                    重置
+                </button>
+            </div>
+        </div>
+    </form>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['form', 'jquery'], function() {
+            let form = layui.form;
+            let $ = layui.jquery;
+
+            let MODULE_PATH = "/system/role";
+
+            /******************************************* 组件渲染区 *****************************************************/
+
+            /****************************************** 事件监听区 *****************************************************/
+            /** 表单提交事件监听 */
+            form.on('submit(role-save)', function(data) {
+                // 参数校验
+
+                // 表单提交
+                window.submit(data);
+                return false;
+            });
+
+            /****************************************** 功能方法区 *****************************************************/
+            /** 表单提交 */
+            window.submit = function (data) {
+                let loadIndex = layer.load(2);
+                $.ajax({
+                    url: MODULE_PATH,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data.field),
+                    success: function(rsp) {
+                        layer.close(loadIndex);
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 });
+                            return;
+                        }
+
+                        layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                            // 关闭当前页
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            parent.layui.table.reload("role-table");
+                        });
+                    },
+                    error: function (error) {
+                        layer.close(loadIndex);
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>

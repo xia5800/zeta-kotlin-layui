@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="日志详情"/>
+    <style>
+        .layui-form.layui-form-info .layui-form-item {
+            margin-bottom: 0 !important;
+        }
+
+        .layui-input-block.layui-word-aux {
+            word-break: break-all;
+            padding: 9px 0 !important;
+            box-sizing: border-box !important;
+        }
+
+    </style>
+</head>
+<body>
+<form class="layui-form" action="">
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="layui-row">
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作人:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.userName!}</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作时间:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.createTime!}</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">请求方式:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.httpMethod!}</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作系统:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.os!}</div>
+                    </div>
+                </div>
+                <div class="layui-col-md6">
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">IP地址:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.ip!}</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">操作描述:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.description!}</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">请求耗时:</label>
+                        <div class="layui-input-block layui-word-aux">
+                            <:if test="${isNotEmpty(optLog.spendTime)}">
+                                ${parseInt(optLog.spendTime) / 1000}s
+                            </:if>
+                        </div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">浏览器类型:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.browser!}</div>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">设备名称:</label>
+                    <div class="layui-input-block layui-word-aux">${optLog.device!}</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">请求地址:</label>
+                    <div class="layui-input-block layui-word-aux">${optLog.url!}</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">类路径:</label>
+                    <div class="layui-input-block layui-word-aux">${optLog.classPath!}</div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">请求参数:</label>
+                    <div class="layui-input-block layui-word-aux">
+                        <:if test="${isNotEmpty(optLog.params)}">
+                            <pre class="layui-code" lay-title="json">
+${optLog.params}
+                            </pre>
+                        </:if>
+                    </div>
+                </div>
+                <div class="layui-form-item">
+                    <label class="layui-form-label">返回结果:</label>
+                    <div class="layui-input-block layui-word-aux">
+                        <:if test="${isNotEmpty(optLog.result)}">
+                            <pre class="layui-code" lay-title="json">
+${optLog.result}
+                            </pre>
+                        </:if>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</form>
+<!-- 依 赖 脚 本 -->
+<:include file="../../common/js.html" />
+<script>
+    layui.use('code', function () {
+        layui.code({ encode: true  });
+    });
+</script>
+</body>
+</html>

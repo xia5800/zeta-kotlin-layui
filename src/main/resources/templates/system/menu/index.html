@@ -1,0 +1,266 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <:include file="../../common/css.html" title="菜单管理"/>
+</head>
+<body class="pear-container">
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <form class="layui-form" action="">
+                <div class="layui-form-item">
+                    <div class="layui-form-item layui-inline">
+                        <label class="layui-form-label">关键字</label>
+                        <div class="layui-input-inline">
+                            <input type="text" name="keyword" placeholder="" class="layui-input">
+                        </div>
+                    </div>
+                    <div class="layui-form-item layui-inline">
+                        <button class="pear-btn pear-btn-md pear-btn-primary" lay-submit lay-filter="menu-query">
+                            <i class="layui-icon layui-icon-search"></i>
+                            查询
+                        </button>
+                        <button type="reset" class="pear-btn pear-btn-md">
+                            <i class="layui-icon layui-icon-refresh"></i>
+                            重置
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div class="layui-card">
+        <div class="layui-card-body">
+            <table id="menu-table" lay-filter="menu-table"></table>
+        </div>
+    </div>
+
+    <!-- 表头操作列 -->
+    <script type="text/html" id="menu-toolbar">
+        <button class="pear-btn pear-btn-primary pear-btn-md" lay-event="add">
+            <i class="layui-icon layui-icon-add-1"></i>
+            新增
+        </button>
+        <button class="pear-btn pear-btn-danger pear-btn-md" lay-event="batchRemove">
+            <i class="layui-icon layui-icon-delete"></i>
+            删除
+        </button>
+        <button class="pear-btn pear-btn-success pear-btn-md" lay-event="expandAll">
+            <i class="layui-icon layui-icon-spread-left"></i>
+            展开
+        </button>
+        <button class="pear-btn pear-btn-success pear-btn-md" lay-event="foldAll">
+            <i class="layui-icon layui-icon-shrink-right"></i>
+            折叠
+        </button>
+    </script>
+    <!-- 表格操作列 -->
+    <script type="text/html" id="menu-bar">
+        <button class="pear-btn pear-btn-primary pear-btn-sm" lay-event="edit">编辑</button>
+        <button class="pear-btn pear-btn-danger pear-btn-sm" lay-event="remove">删除</button>
+    </script>
+
+    <!-- 权限类型：表格字段格式化 -->
+    <script type="text/html" id="menu-type">
+        {{#if (d.type == '0') { }}
+        <span class="layui-badge layui-bg-blue">目录</span>
+        {{# }else if(d.type == '1'){ }}
+        <span class="layui-badge layui-bg-green">菜单</span>
+        {{# }else if(d.type == '2'){ }}
+        <span class="layui-badge layui-bg-gray">按钮</span>
+        {{# } }}
+    </script>
+    <!-- 打开方式：表格字段格式化 -->
+    <script type="text/html" id="menu-openType">
+        {{#if (d.openType == '_iframe') { }}
+        <span>正常打开（_iframe）</span>
+        {{# }else if(d.openType == '_blank'){ }}
+        <span>新建浏览器标签页（_blank）</span>
+        {{# } }}
+    </script>
+    <!-- 图标：表格字段格式化 -->
+    <script type="text/html" id="icon">
+        <i class="layui-icon {{d.icon}}"></i>
+    </script>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['table','form','jquery','treetable', 'drawer', 'common'],function () {
+            let table = layui.table;
+            let form = layui.form;
+            let $ = layui.jquery;
+            let treetable = layui.treetable;
+            let common = layui.common;
+            let drawer = layui.drawer;
+
+            let MODULE_PATH = "/system/menu";
+
+            /** 表格字段 */
+            let cols = [
+                [
+                    {type: 'checkbox'},
+                    {field: 'title', minWidth: 200, title: '菜单名称'},
+                    {field: 'href', minWidth: 200, title: '菜单地址'},
+                    {field: 'icon', title: '图标', width: 120, templet:'#icon'},
+                    {field: 'type', title: '权限类型', width: 120, templet:'#menu-type'},
+                    {field: 'openType', title: '打开方式', templet: '#menu-openType' },
+                    {field: 'sortValue', title: '排序'},
+                    {title: '操作',templet: '#menu-bar', width: 150, align: 'center'}
+                ]
+            ];
+
+            /****************************************** 组件渲染区 *****************************************************/
+            /** 表格渲染 */
+            treetable.render({
+                url: MODULE_PATH + '/tree',
+                treeColIndex: 1,
+                treeSpid: '0',
+                treeIdName: 'id',
+                treePidName: 'parentId',
+                skin:'line',
+                treeDefaultClose: true,
+                toolbar:'#menu-toolbar',
+                elem: '#menu-table',
+                defaultToolbar: [{
+                    title: '刷新',
+                    layEvent: 'refresh',
+                    icon: 'layui-icon-refresh',
+                }, 'filter', 'print', 'exports'],
+                page: false,
+                cols: cols
+            });
+
+            /******************************************* 事件监听区 *****************************************************/
+            /** 表格操作栏点击事件监听 */
+            table.on('tool(menu-table)',function(obj){
+                if (obj.event === 'remove') {
+                    window.remove(obj);
+                } else if (obj.event === 'edit') {
+                    window.edit(obj);
+                }
+            });
+
+            /** 表头工具栏点击事件监听 */
+            table.on('toolbar(menu-table)', function(obj){
+                if(obj.event === 'add'){
+                    window.add();
+                } else if(obj.event === 'refresh'){
+                    window.refresh();
+                } else if(obj.event === 'batchRemove'){
+                    window.batchRemove(obj);
+                }  else if(obj.event === 'expandAll'){
+                    treetable.expandAll("#menu-table");
+                } else if(obj.event === 'foldAll'){
+                    treetable.foldAll("#menu-table");
+                }
+            });
+
+            /** 条件搜索监听 */
+            form.on('submit(menu-query)', function(data) {
+                treetable.search('#menu-table', data.field.keyword)
+                return false;
+            });
+
+            /****************************************** 功能方法区 *****************************************************/
+            /** 表格刷新 */
+            window.refresh = function() {
+                treetable.reload('#menu-table');
+            }
+
+            /** 打开新增弹窗 */
+            window.add = function(){
+                drawer.open({
+                    legacy: false,
+                    title: '新增',
+                    iframe: MODULE_PATH + '/add',
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '40%',
+                    closeBtn: 1,
+                });
+            }
+
+            /** 打开修改弹窗 */
+            window.edit = function(obj){
+                drawer.open({
+                    legacy: false,
+                    title: '修改',
+                    iframe: MODULE_PATH + '/edit?id=' + obj.data['id'] + '&t='+ new Date().getTime(),
+                    offset: "r",
+                    area: common.isModile() ? '100%' : '40%',
+                    closeBtn: 1,
+                });
+            }
+
+            /** 打开删除弹窗 */
+            window.remove = function(obj){
+                layer.confirm('确定要删除该菜单吗？', {icon: 3, title:'提示'}, function(index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/remove",
+                        type:'delete',
+                        data: {id: obj.data['id']},
+                        success: function(rsp){
+                            layer.close(loading);
+                            if (rsp.code !== 200) {
+                                layer.msg(rsp.message, { icon: 2, time: 1000 });
+                                return;
+                            }
+                            layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                                obj.del();
+                            });
+                        },
+                        error: function (error) {
+                            layer.close(loading);
+                            if (error.responseJSON) {
+                                layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                            }
+                        }
+                    })
+                });
+            }
+
+            /** 打开批量删除弹窗 */
+            window.batchRemove = function(obj) {
+                let data = table.checkStatus(obj.config.id).data;
+                if (data.length === 0) {
+                    layer.msg("未选中数据", { icon: 3, time: 1000 });
+                    return false;
+                }
+
+                let ids = [];
+                for (let i = 0; i < data.length; i++) {
+                    ids.push(data[i].id)
+                }
+
+                layer.confirm('确定要删除这些菜单吗？', { icon: 3, title: '提示' }, function(index) {
+                    layer.close(index);
+                    let loading = layer.load();
+                    $.ajax({
+                        url: MODULE_PATH + "/batchRemove",
+                        type: 'delete',
+                        contentType: 'application/json',
+                        data: JSON.stringify(ids),
+                        success: function(rsp) {
+                            layer.close(loading);
+                            if (rsp.code !== 200) {
+                                layer.msg(rsp.message, { icon: 2, time: 1000 });
+                                return;
+                            }
+                            layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                                window.refresh();
+                            });
+                        },
+                        error: function (error) {
+                            layer.close(loading);
+                            if (error.responseJSON) {
+                                layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                            }
+                        }
+                    })
+                });
+            }
+        })
+    </script>
+</body>
+</html>

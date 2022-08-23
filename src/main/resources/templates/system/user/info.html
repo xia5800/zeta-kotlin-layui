@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="个人资料"/>
+    <link rel="stylesheet" href="/assets/css/other/person.css" />
+</head>
+<body class="pear-container">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md3">
+            <div class="layui-card">
+                <div class="layui-card-body" style="padding: 25px;">
+                    <div class="text-center layui-text">
+                        <div class="user-info-head" id="userInfoHead">
+                            <img src="${user.avatar!'/assets/images/avatar.jpg'}" id="userAvatar" width="115px" height="115px" alt="">
+                        </div>
+                        <h2 style="padding-top: 20px;font-size: 20px;">
+                            ${user.username!''}
+                        </h2>
+                        <p style="padding-top: 8px;margin-top: 10px;font-size: 13.5px;">
+                            <i class="layui-icon layui-icon-auz"></i>
+                            <:for items="${user.roles}" var="role">
+                                <span>${role.name}</span>&nbsp;
+                            </:for>
+                        </p>
+                    </div>
+                </div>
+                <div style="height: 45px;border-top: 1px whitesmoke solid;text-align: center;line-height: 45px;font-size: 13.5px;">
+                    <span>这个人很懒，还没有个性签名</span>
+                </div>
+            </div>
+
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    归档
+                </div>
+                <div class="layui-card-body">
+                    <ul class="list">
+                        <li class="list-item"><span class="title">优化代码格式</span><span class="footer">2020-06-04 11:28</span></li>
+                        <li class="list-item"><span class="title">新增消息组件</span><span class="footer">2020-06-01 04:23</span></li>
+                        <li class="list-item"><span class="title">移动端兼容</span><span class="footer">2020-05-22 21:38</span></li>
+                        <li class="list-item"><span class="title">系统布局优化</span><span class="footer">2020-05-15 14:26</span></li>
+                        <li class="list-item"><span class="title">兼容多系统菜单模式</span><span class="footer">2020-05-13 16:32</span></li>
+                        <li class="list-item"><span class="title">兼容多标签页切换</span><span class="footer">2019-12-9 14:58</span></li>
+                        <li class="list-item"><span class="title">扩展下拉组件</span><span class="footer">2019-12-7 9:06</span></li>
+                        <li class="list-item"><span class="title">扩展卡片样式</span><span class="footer">2019-12-1 10:26</span></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md9">
+            <div class="layui-card">
+                <div class="layui-card-header">
+                    我的资料
+                </div>
+                <div class="layui-card-body">
+                    <form class="layui-form" action="">
+                        <input type="hidden" id="id" name="id" value="${user.id}">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-form-required">账号</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="account" value="${user.account!}" id="account" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入账号" class="layui-input" disabled readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label layui-form-required">用户名</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="username" value="${user.username!}" lay-verify="required" autocomplete="off"
+                                       placeholder="请输入用户名" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">邮箱</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="email" value="${user.email!}" autocomplete="off" placeholder="请输入邮箱"
+                                       class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">电话</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="mobile" value="${user.mobile!}" autocomplete="off"
+                                       placeholder="请输入电话" class="layui-input">
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">性别</label>
+                            <div class="layui-input-block">
+                                <input type="radio" name="sex" value="0" title="未知" ${user.sex! == 0? 'checked' : ''}>
+                                <input type="radio" name="sex" value="1" title="男" ${user.sex! == 1? 'checked' : ''}>
+                                <input type="radio" name="sex" value="2" title="女" ${user.sex! == 2? 'checked' : ''}>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">生日</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="birthday" value="${user.birthday!}" class="layui-input" id="birthday" placeholder="yyyy-MM-dd">
+                            </div>
+                        </div>
+                        <div style="text-align: right">
+                            <button type="submit" class="pear-btn pear-btn-primary pear-btn-sm" lay-submit=""
+                                    lay-filter="user-edit">
+                                <i class="layui-icon layui-icon-ok"></i>
+                                修改
+                            </button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['jquery', 'form', 'laydate'], function () {
+            let $ = layui.jquery;
+            let form = layui.form;
+            let laydate = layui.laydate;
+
+            let roleIds = JSON.parse('${userRoles![]}').map(function (d) {
+                return d.id
+            });
+
+            let MODULE_PATH = "/system/user";
+
+            /****************************************** 组件渲染区 *****************************************************/
+            // 渲染时间选择组件
+            laydate.render({
+                elem: '#birthday'
+            });
+
+            /****************************************** 事件监听区 *****************************************************/
+            /** 表单提交事件监听 */
+            form.on('submit(user-edit)', function(data) {
+                // 参数校验
+                data.field.roleIds = roleIds;
+
+                // 修改用户基本信息
+                window.updateUserInfo(data);
+                return false;
+            });
+
+            /****************************************** 功能方法区 *****************************************************/
+            /** 打开修改头像弹窗 */
+            $("#userAvatar").click(function () {
+                layer.open({
+                    type: 2,
+                    title: '修改头像',
+                    shade: 0.1,
+                    area: ["900px", "500px"],
+                    content: MODULE_PATH + '/profile',
+                    btn: ['确定', '取消'],
+                    yes: function (index, layero) {
+                        window['layui-layer-iframe' + index].submitForm();
+                    }
+                });
+            });
+
+            /** 修改头像弹窗回调 */
+            window.callback = function (data) {
+                console.log(data);
+                layer.close(data.index);
+                $("#userAvatar").attr("src", data.newAvatar);
+                // 在这里上传图片
+                window.uploadAvatar(data);
+            }
+
+            /** 上传头像 */
+            window.uploadAvatar = function (data) {
+                if (!data) { return; }
+
+                $.ajax({
+                    url: '/system/file/upload64',
+                    type: 'POST',
+                    contentType: 'application/json',
+                    data: JSON.stringify({base64: data.newAvatar, bizType: 'avatar'}),
+                    success: function (rsp) {
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 }, function () {
+                                parent.layui.admin.refreshThis();
+                            });
+                            return;
+                        }
+                        window.updateUserAvatar(rsp.data);
+                    },
+                    error: function (error) {
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                        parent.layui.admin.refreshThis();
+                    }
+                })
+            }
+
+            /** 修改用户头像 */
+            window.updateUserAvatar = function (data) {
+                console.log("data", data);
+                let loadIndex = layer.load(2);
+                $.ajax({
+                    url: MODULE_PATH + '/updateAvatar',
+                    type: 'PUT',
+                    data: {avatar: data.url},
+                    success: function (rsp) {
+                        layer.close(loadIndex);
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 }, function () {
+                                parent.layui.admin.refreshThis();
+                            });
+                            return;
+                        }
+                        layer.msg(rsp.message, { icon: 1, time: 1000 });
+                    },
+                    error: function (error) {
+                        layer.close(loadIndex);
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                });
+            }
+
+            /** 修改用户基本信息 */
+            window.updateUserInfo = function (data) {
+                let loadIndex = layer.load(2);
+                $.ajax({
+                    url: MODULE_PATH,
+                    type: 'PUT',
+                    contentType: 'application/json',
+                    data: JSON.stringify(data.field),
+                    success: function(rsp) {
+                        layer.close(loadIndex);
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 });
+                            return;
+                        }
+
+                        layer.msg(rsp.message, { icon: 1, time: 1000 });
+                    },
+                    error: function (error) {
+                        layer.close(loadIndex);
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                });
+            }
+
+        });
+    </script>
+</body>
+</html>

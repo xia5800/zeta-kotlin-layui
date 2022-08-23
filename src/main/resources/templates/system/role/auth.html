@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="分配权限"/>
+    <style>
+        #fixed-bar{
+            position: fixed;
+            left: 0;
+            bottom: 0;
+            width: 100%;
+        }
+        .main-container{
+            height: auto !important;
+        }
+    </style>
+</head>
+<body>
+    <div class="mainBox">
+        <div class="main-container">
+            <div class="layui-inline">
+                <button class="pear-btn pear-btn-primary pear-btn-xs" dtree-id="roleAuthTree" dtree-menu="moveDown">展开全部节点</button>
+                <button class="pear-btn pear-btn-primary pear-btn-xs" dtree-id="roleAuthTree" dtree-menu="moveUp">收缩全部节点</button>
+            </div>
+
+            <ul id="roleAuthTree" class="dtree" data-id="0"></ul>
+        </div>
+        <div id="fixed-bar" class="bottom">
+            <div class="button-container">
+                <button id="submitBtn" class="pear-btn pear-btn-primary pear-btn-sm">
+                    <i class="layui-icon layui-icon-ok"></i>
+                    提交
+                </button>
+                <button id="closeBtn" class="pear-btn pear-btn-sm" >
+                    <i class="pear-icon pear-icon-close"></i>
+                    关闭
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script>
+        layui.use(['dtree', 'jquery'], function() {
+            let dtree = layui.dtree;
+            let $ = layui.jquery;
+
+            let MODULE_PATH = "/system/roleMenu";
+
+            /****************************************** 组件渲染区 *****************************************************/
+            /** dtree渲染。  dtree官网： http://www.wisdomelon.com/DTreeHelper/ */
+            dtree.render({
+                elem: "#roleAuthTree",
+                method: 'get',                                  // 请求方式
+                url: MODULE_PATH + '/${roleId!}',               // 请求地址
+                dataStyle: "layuiStyle",                        // 返回数据的格式。这里选择使用layui的格式 {code: 0, msg: xxx, data:[]}
+                dataFormat: "list",                             // 返回数据的格式。为了方便后端，选择list。前端对list进行 list To tree 操作
+                response: { message:"msg", statusCode: 0 },  // 返回值格式化。
+                initLevel: "1",                                 // 展开层级
+                type: "all",                                    // 全量加载，取消展开之后自动加载
+                skin: "layui",                                  // layui类型的皮肤
+                checkbar: true,                                 // 是否显示复选框
+                menubar:true,
+                menubarTips: {
+                    group:[] // 按钮组置空
+                }
+            });
+
+            /****************************************** 事件监听区 *****************************************************/
+            /** 提交按钮事件监听 */
+            $("#submitBtn").click(function () {
+                let params = dtree.getCheckbarJsonArrParam("roleAuthTree");
+                let loadIndex = layer.load(2);
+                $.ajax({
+                    url: MODULE_PATH,
+                    type: 'PUT',
+                    data: JSON.stringify({roleId: '${roleId!}', menuIds: params.nodeId}),
+                    contentType: 'application/json',
+                    success: function (rsp) {
+                        layer.close(loadIndex);
+                        if (rsp.code !== 200) {
+                            layer.msg(rsp.message, { icon: 2, time: 1000 });
+                            return;
+                        }
+
+                        layer.msg(rsp.message, { icon: 1, time: 1000 }, function() {
+                            // 关闭当前页
+                            parent.layer.close(parent.layer.getFrameIndex(window.name));
+                            parent.layui.table.reload("role-table");
+                        });
+                    },
+                    error: function (error) {
+                        layer.close(loadIndex);
+                        if (error.responseJSON) {
+                            layer.msg(error.responseJSON.message, { icon: 2, time: 1000 });
+                        }
+                    }
+                })
+            });
+
+            /** 关闭按钮事件监听 */
+            $("#closeBtn").click(function () {
+                // 关闭当前页
+                parent.layer.close(parent.layer.getFrameIndex(window.name));
+            });
+
+            /****************************************** 功能方法区 *****************************************************/
+
+
+        });
+    </script>
+</body>
+</html>

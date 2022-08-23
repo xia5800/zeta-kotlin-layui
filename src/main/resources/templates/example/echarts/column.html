@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../../common/css.html" title="条状图表"/>
+    <link rel="stylesheet" href="/assets/css/other/result.css" />
+</head>
+<body class="pear-container">
+    <div class="layui-row layui-col-space10">
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="column1" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="column2" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="column3" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+        <div class="layui-col-md6">
+            <div class="layui-card">
+                <div class="layui-card-body">
+                    <div id="column4" style="min-height:400px;"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../../common/js.html" />
+    <script src="/assets/data/script/column1.js"></script>
+    <script src="/assets/data/script/column2.js"></script>
+    <script src="/assets/data/script/column3.js"></script>
+    <script src="/assets/data/script/column4.js"></script>
+</body>
+</html>
