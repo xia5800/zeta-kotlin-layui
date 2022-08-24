@@ -97,9 +97,10 @@ class SysRoleMenuController(
                 batchList.add(SysRoleMenu(roleMenuHandleDto.roleId, it))
             }
             if (!service.saveBatch(batchList)) return fail("操作失败")
-            // 删除用户角色、权限缓存
-            service.clearUserCache(roleMenuHandleDto.roleId!!)
         }
+
+        // 删除用户角色、权限缓存
+        service.clearUserCache(roleMenuHandleDto.roleId!!)
         return success(true)
     }
 
