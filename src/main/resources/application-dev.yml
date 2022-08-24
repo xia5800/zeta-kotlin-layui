@@ -7,9 +7,9 @@ zeta:
     password:
   # 数据源配置
   database:
-      url: jdbc:mysql://localhost:3306/zeta_kotlin_layui?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
-      username: root
-      password: 'root'
+    url: jdbc:mysql://localhost:3306/zeta_kotlin_layui?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
+    username: root
+    password: 'root'
     druid:
       # druid web监控台是否启动
       WebConsoleEnabled: true
