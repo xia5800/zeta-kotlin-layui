@@ -296,8 +296,7 @@ class SysUserController(
         }
 
         // 修改成新密码
-        val password = service.encodePassword(param.newPwd!!)
-        user.password = password
+        user.password = service.encodePassword(param.newPwd!!)
         if (!service.updateById(user)) {
             return fail("修改失败", false)
         }

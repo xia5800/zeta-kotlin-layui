@@ -23,7 +23,6 @@ interface DeleteController<Entity, Id: Serializable>: BaseController<Entity> {
     /**
      * 单体删除
      *
-     * 吐个槽： 注解地狱
      * @param id
      * @return R<Boolean>
      */

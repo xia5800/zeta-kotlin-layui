@@ -72,6 +72,7 @@
     </sql>
 
 
+    <!-- 自定义分页查询登录日志 -->
     <select id="customPage" resultType="com.zeta.system.model.entity.SysLoginLog">
         SELECT <include refid="Base_Column_List" /> FROM sys_login_log
         <where>

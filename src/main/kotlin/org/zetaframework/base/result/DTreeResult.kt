@@ -30,19 +30,58 @@ class DTreeResult private constructor(){
     var data: List<DTree>? = mutableListOf()
 
 
+    /**
+     * 构造方法
+     *
+     * 说明：
+     * 使用本构造方法。前端Dtree组件需要如下配置：
+     * ```
+     * dtree.render({
+     *      dataStyle: "layuiStyle",
+     *      response: { message:"msg", statusCode: 0 },
+     *      ...
+     * })
+     * ```
+     */
     constructor(data: List<DTree>?): this(ErrorCodeEnum.OK, data) {
         this.data = data
     }
 
+    /**
+     * 构造方法
+     *
+     * 说明：
+     * 使用本构造方法。前端Dtree组件需要如下配置：
+     * ```
+     * dtree.render({
+     *      dataStyle: "layuiStyle",
+     *      response: { message:"msg", statusCode: 0 },
+     *      ...
+     * })
+     * ```
+     */
     constructor(errorCodeEnum: ErrorCodeEnum, data: List<DTree>? = mutableListOf()): this() {
         this.code = errorCodeEnum.code
         this.msg = errorCodeEnum.msg
         this.data = data
     }
 
-    constructor(code: Int, msg: String, data: List<DTree>) : this() {
-        this.code = code
-        this.msg = msg
+    /**
+     * 构造方法
+     *
+     * 说明：
+     * 使用本构造方法。前端Dtree组件不要配置成以下这样：
+     * ```
+     * dtree.render({
+     *      // 不要配置成这样
+     *      dataStyle: "layuiStyle",
+     *      response: { message:"msg", statusCode: 0 },
+     *      ...
+     * })
+     * ```
+     */
+    constructor(status: Status, data: List<DTree>) : this() {
+        this.status = status
         this.data = data
     }
 
