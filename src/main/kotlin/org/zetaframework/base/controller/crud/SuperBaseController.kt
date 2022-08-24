@@ -112,8 +112,24 @@ fun SuperBaseController.getTrimModulePath(): String {
 /**
  * 扩展方法：前往指定页面
  *
+ * 说明：
+ * 前往当前模块下的页面
+ *
  * @param viewName 视图名字
  */
 fun SuperBaseController.goView(viewName: String): String {
-    return StrUtil.join(StrPool.SLASH, getTrimModulePath(), viewName.trim(StrPool.C_SLASH))
+    return goView(getTrimModulePath(), viewName)
+}
+
+/**
+ * 扩展方法：前往指定页面
+ *
+ * 说明：
+ * 前往指定模块下的页面
+ *
+ * @param modulePath 视图所在模块路径
+ * @param viewName 视图名字
+ */
+fun SuperBaseController.goView(modulePath: String, viewName: String): String {
+    return StrUtil.join(StrPool.SLASH, modulePath, viewName.trim(StrPool.C_SLASH))
 }
