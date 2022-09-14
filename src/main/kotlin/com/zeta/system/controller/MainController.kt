@@ -2,6 +2,7 @@ package com.zeta.system.controller
 
 import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.bean.BeanUtil
+import com.github.xiaoymin.knife4j.annotations.ApiSupport
 import com.wf.captcha.utils.CaptchaUtil
 import com.zeta.system.model.entity.SysUser
 import com.zeta.system.model.enumeration.UserStateEnum
@@ -31,6 +32,7 @@ import javax.servlet.http.HttpServletResponse
  * 登录认证
  * @author gcc
  */
+@ApiSupport(order = 1)
 @Api(tags = ["登录认证"])
 @Controller
 class MainController(private val applicationContext: ApplicationContext):
