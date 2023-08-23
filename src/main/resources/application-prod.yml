@@ -4,7 +4,7 @@ zeta:
     database: 0
     ip: localhost
     port: 6379
-    password:
+    password: ''
   # 数据源配置
   database:
     url: jdbc:mysql://localhost:3306/zeta_kotlin_layui?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
@@ -16,6 +16,12 @@ zeta:
       login-username: admin
       login-password: admin123
 
+spring:
+  datasource:
+    druid:
+      # removeAbandoned is true, not use in production
+      remove-abandoned: false
+
 # knife4j配置 生产环境禁止访问swagger文档
 knife4j:
   enable: true
@@ -24,5 +30,5 @@ knife4j:
 # 日志配置
 logging:
   file:
-    path: /home/product/log/zeta-kotlin
+    path: /home/product/log/zeta-kotlin-layui
   config: classpath:logback-spring.xml

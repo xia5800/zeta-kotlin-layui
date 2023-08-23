@@ -4,7 +4,7 @@ zeta:
     database: 0
     ip: localhost
     port: 6379
-    password:
+    password: ''
   # 数据源配置
   database:
     url: jdbc:mysql://localhost:3306/zeta_kotlin_layui?useUnicode=true&characterEncoding=utf8&useSSL=false&serverTimezone=GMT%2B8
@@ -15,13 +15,14 @@ zeta:
       WebConsoleEnabled: true
       login-username: admin
       login-password: admin
-  # beetl模板配置
-  beetl:
-    # dev环境，开启beetl模板的热加载功能
-    dev: true
+
+# beetl模板配置
+beetl-beetlsql:
+  # dev环境，开启beetl模板的热加载功能
+  dev: true
 
 # 日志配置
 logging:
   file:
-    path: D:/server/log/zeta-kotlin
+    path: D:/server/log/zeta-kotlin-layui
   config: classpath:logback-spring.xml
