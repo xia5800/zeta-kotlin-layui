@@ -15,19 +15,19 @@ import io.swagger.annotations.ApiModelProperty
 @ApiModel(description = "分页查询参数")
 class PageParam private constructor(){
     /** 当前页 */
-    @ApiModelProperty(value = "当前页", example = "0")
-    var page: Long = 0
+    @ApiModelProperty(value = "当前页", example = "1", required = true)
+    var page: Long = 1
 
     /** 每页显示条数 */
-    @ApiModelProperty(value = "每页显示条数", example = "10")
+    @ApiModelProperty(value = "每页显示条数", example = "10", required = true)
     var limit: Long = 10
 
     /** 排序字段 */
-    @ApiModelProperty(value = "排序字段", allowableValues = "id,createTime,updateTime", example = "id")
+    @ApiModelProperty(value = "排序字段", allowableValues = "id,createTime,updateTime", example = "id", required = false)
     var sort: String? = null
 
     /** 排序规则 */
-    @ApiModelProperty(value = "排序规则", allowableValues = "desc,asc", example = "desc")
+    @ApiModelProperty(value = "排序规则", allowableValues = "desc,asc", example = "desc", required = false)
     var order: String? = null
 
 
@@ -45,7 +45,7 @@ class PageParam private constructor(){
         val page: Page<E> = Page<E>(this.page, this.limit)
 
         // 判断是否有排序
-        if(StrUtil.isBlank(this.sort)) {
+        if (StrUtil.isBlank(this.sort)) {
             return page
         }
 

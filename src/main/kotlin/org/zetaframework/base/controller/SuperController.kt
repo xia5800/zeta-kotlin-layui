@@ -1,10 +1,10 @@
 package org.zetaframework.base.controller
 
 import com.baomidou.mybatisplus.extension.service.IService
-import org.zetaframework.base.controller.crud.DeleteController
-import org.zetaframework.base.controller.crud.QueryController
-import org.zetaframework.base.controller.crud.SaveController
-import org.zetaframework.base.controller.crud.UpdateController
+import org.zetaframework.base.controller.curd.DeleteController
+import org.zetaframework.base.controller.curd.QueryController
+import org.zetaframework.base.controller.curd.SaveController
+import org.zetaframework.base.controller.curd.UpdateController
 import org.zetaframework.base.controller.view.IndexView
 import java.io.Serializable
 import java.lang.reflect.ParameterizedType

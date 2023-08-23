@@ -132,13 +132,13 @@ class GlobalExceptionHandler {
      * 方法参数类型不匹配异常
      *
      * @param ex MethodArgumentTypeMismatchException
-     * @return R<*>?
+     * @return ApiResult<*>?
      */
     @ExceptionHandler(MethodArgumentTypeMismatchException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun methodArgumentTypeMismatchException(ex: MethodArgumentTypeMismatchException): ApiResult<*>? {
         logger.warn("抛出方法参数类型不匹配异常：", ex)
-        val msg = "参数：[${ex.value}]的传入值：[${ex.name}]与预期的字段类型：[${Objects.requireNonNull(ex.requiredType)!!.name}]不匹配"
+        val msg = "参数：[${ex.name}]的传入值：[${ex.value}]与预期的字段类型：[${Objects.requireNonNull(ex.requiredType)!!.name}]不匹配"
         return ApiResult.result(ErrorCodeEnum.ERR_ARGUMENT_TYPE_MISMATCH_EXCEPTION.code, msg, ex.message)
     }
 
@@ -146,12 +146,12 @@ class GlobalExceptionHandler {
      * 从请求中读取数据失败异常
      *
      * @param ex HttpMessageNotReadableException
-     * @return R<*>?
+     * @return ApiResult<*>?
      */
     @ExceptionHandler(HttpMessageNotReadableException::class)
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     fun httpMessageNotReadableException(ex: HttpMessageNotReadableException): ApiResult<*>? {
-        logger.warn("抛出登录认证异常：", ex)
+        logger.warn("抛出从请求中读取数据失败异常：", ex)
         var msg = ex.message
         if (StrUtil.containsAny(msg, "Could not read document:")) {
             msg = "无法正确的解析json类型的参数：${StrUtil.subBetween(msg, "Could not read document:", " at ")}"
@@ -160,6 +160,11 @@ class GlobalExceptionHandler {
         // Controller接口参数为空
         if (StrUtil.containsAny(msg, "Required request body is missing")) {
             msg = "请求参数为空"
+        }
+
+        // 接口参数枚举值不正确
+        if (StrUtil.containsAny(msg, "not one of the values accepted for Enum class")) {
+            msg = "枚举参数值不正确"
         }
         return ApiResult.result(ErrorCodeEnum.ERR_REQUEST_PARAM_EXCEPTION.code, msg, ex.message)
     }
@@ -193,32 +198,39 @@ class GlobalExceptionHandler {
 
 
     /**
-     * sa-token相关异常处理
+     * 角色认证异常处理
      *
      * @param ex SaTokenException
      * @param request HttpServletRequest
      * @return ApiResult<*>
      */
-    @ExceptionHandler(SaTokenException::class)
-    @ResponseStatus(HttpStatus.UNAUTHORIZED)
-    fun saTokenExceptionHandler(ex: SaTokenException, request: HttpServletRequest): ApiResult<*> {
-        logger.warn("抛出sa-token相关异常：", ex)
-        var code: Int = ErrorCodeEnum.FAIL.code
-        var message: String? = ""
-        if(ex is NotLoginException) {
-            return notLoginExceptionHandler(ex, request)
-        } else if(ex is NotRoleException || ex is NotPermissionException) {
-            message = ErrorCodeEnum.FORBIDDEN.msg
-            code = ErrorCodeEnum.FORBIDDEN.code
-        } else {
-            message = ex.message
-        }
-
+    @ExceptionHandler(NotRoleException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    fun notRoleExceptionHandler(ex: NotRoleException, request: HttpServletRequest): ApiResult<*> {
+        logger.warn("抛出角色认证异常：", ex)
         if (!isAjax(request)) {
             // 重定向到没有权限页面
             SaHolder.getResponse().redirect("/error/403")
         }
-        return ApiResult.result(code, message, null)
+        return ApiResult.result(ErrorCodeEnum.FORBIDDEN.code, ErrorCodeEnum.FORBIDDEN.msg, null)
+    }
+
+    /**
+     * 权限认证异常处理
+     *
+     * @param ex SaTokenException
+     * @param request HttpServletRequest
+     * @return ApiResult<*>
+     */
+    @ExceptionHandler(NotPermissionException::class)
+    @ResponseStatus(HttpStatus.FORBIDDEN)
+    fun notPermissionExceptionHandler(ex: NotPermissionException, request: HttpServletRequest): ApiResult<*> {
+        logger.warn("抛出权限认证异常：", ex)
+        if (!isAjax(request)) {
+            // 重定向到没有权限页面
+            SaHolder.getResponse().redirect("/error/403")
+        }
+        return ApiResult.result(ErrorCodeEnum.FORBIDDEN.code, ErrorCodeEnum.FORBIDDEN.msg, null)
     }
 
 

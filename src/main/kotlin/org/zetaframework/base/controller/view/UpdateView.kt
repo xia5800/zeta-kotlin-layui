@@ -2,8 +2,8 @@ package org.zetaframework.base.controller.view
 
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
-import org.zetaframework.base.controller.crud.BaseController
-import org.zetaframework.base.controller.crud.goView
+import org.zetaframework.base.controller.BaseController
+import org.zetaframework.base.controller.goView
 import springfox.documentation.annotations.ApiIgnore
 import javax.servlet.http.HttpServletRequest
 

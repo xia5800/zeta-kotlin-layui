@@ -2,7 +2,7 @@ package org.zetaframework.core.mybatisplus.properties
 
 import com.baomidou.mybatisplus.annotation.DbType
 import org.springframework.boot.context.properties.ConfigurationProperties
-import org.zetaframework.core.mybatisplus.enum.UserIdType
+import org.zetaframework.core.mybatisplus.enums.UserIdType
 
 /**
  * 数据源配置参数
@@ -15,6 +15,9 @@ class DatabaseProperties(
 
     /** 是否启用 sql性能规范插件 */
     var isIllegalSql: Boolean = false,
+
+    /** 是否启用 乐观锁插件 */
+    var isOptimisticLocker: Boolean = false,
 
     /** 分页大小限制 */
     var maxLimit: Long = -1,

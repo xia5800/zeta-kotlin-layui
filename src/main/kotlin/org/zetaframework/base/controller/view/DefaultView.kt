@@ -1,7 +1,7 @@
 package org.zetaframework.base.controller.view
 
 import cn.hutool.core.text.StrPool
-import org.zetaframework.base.controller.crud.SuperBaseController
+import org.zetaframework.base.controller.SuperBaseController
 
 
 /**

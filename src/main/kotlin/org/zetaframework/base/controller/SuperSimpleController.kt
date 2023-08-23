@@ -4,7 +4,6 @@ import com.baomidou.mybatisplus.extension.service.IService
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Autowired
-import org.zetaframework.base.controller.crud.BaseController
 import java.lang.reflect.ParameterizedType
 
 /**

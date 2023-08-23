@@ -9,8 +9,8 @@ import org.springframework.boot.context.properties.ConfigurationProperties
 @ConfigurationProperties(prefix = "zeta.security.ignore")
 class IgnoreProperties {
 
-    /** 基础忽略鉴权地址 */
-    var baseUrl: MutableList<String> = mutableListOf(
+    /** 静态资源、swagger、druid、layui相关 */
+    var staticUrl: MutableList<String> = mutableListOf(
         // 以下是swagger相关的放行地址
         "/**/*.html",
         "/**/*.css",
@@ -28,6 +28,10 @@ class IgnoreProperties {
         // layui前端相关放行地址
         "/favicon.ico",
         "/assets/**",
+    )
+
+    /** 基础忽略鉴权地址 */
+    var baseUrl: MutableList<String> = mutableListOf(
         "/error",
         "/login",
         // websocket放行地址
@@ -43,6 +47,7 @@ class IgnoreProperties {
      */
     fun getNotMatchUrl(): MutableList<String> {
         return mutableListOf<String>().apply {
+            addAll(staticUrl)
             addAll(baseUrl)
             addAll(ignoreUrl)
         }

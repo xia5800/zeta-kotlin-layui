@@ -15,7 +15,7 @@ import com.zeta.system.model.dto.sysUser.LoginUserDTO
  * ```
  * // 方式一：在beetl模板中使用
  * <%
- *  if(sa.hasPermission("system:user:view")) {
+ *  if (sa.hasPermission("system:user:view")) {
  *      println("xxxxx");
  *  }
  * %>

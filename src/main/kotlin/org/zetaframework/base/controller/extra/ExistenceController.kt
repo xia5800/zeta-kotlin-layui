@@ -5,7 +5,7 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.PostMapping
 import org.springframework.web.bind.annotation.RequestBody
 import org.springframework.web.bind.annotation.ResponseBody
-import org.zetaframework.base.controller.crud.BaseController
+import org.zetaframework.base.controller.BaseController
 import org.zetaframework.base.param.ExistParam
 import org.zetaframework.base.result.ApiResult
 import org.zetaframework.core.saToken.annotation.PreCheckPermission
@@ -36,7 +36,7 @@ interface ExistenceController<Entity, Id>: BaseController<Entity> {
     @ResponseBody
     @PostMapping("/existence")
     fun existence(@RequestBody @Validated param: ExistParam<Entity, Id>): ApiResult<Boolean> {
-        if(param.isExist(getBaseService())) {
+        if (param.isExist(getBaseService())) {
             return success("${param.value}已存在", true)
         }
         return success("${param.value}不存在", false)
