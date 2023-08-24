@@ -36,7 +36,7 @@ import javax.servlet.http.HttpServletResponse
  *
  * @author gcc
  */
-interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity> {
+interface ImportController<ImportBean : ImportPoi, Entity> : BaseController<Entity> {
 
     /**
      * 获取导入实体的类型
@@ -80,7 +80,8 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
      */
     @PreCheckPermission(value = ["{}:import", "{}:view"], mode = PreMode.OR)
     @ApiOperationSupport(order = 80, author = "AutoGenerate")
-    @ApiOperation(value = "获取导入模板", notes = """
+    @ApiOperation(
+        value = "获取导入模板", notes = """
     获取导入模板接口传参示例：
     GET /api/xxxx/template?filename=用户列表&type=XSSF&sheetName=&title=
 
@@ -89,13 +90,14 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
     "sheetName": "",        // 【非必传】sheet名
     "title": "",            // 【非必传】第一页sheet表格的表头
     "type": "XSSF"          // 【必传】可选值：HSSF（excel97-2003版本，扩展名.xls）、XSSF（excel2007+版本，扩展名.xlsx）
-    """)
+    """
+    )
     @ResponseBody
     @SysLog(response = false)
     @GetMapping(value = ["/template"], produces = ["application/octet-stream"])
     fun getImportTemplate(param: ImportExcelTemplateParam, request: HttpServletRequest, response: HttpServletResponse) {
         // 处理excel文件类型
-        val type = if (param.type!! == ExcelType.HSSF.name)  ExcelType.HSSF else  ExcelType.XSSF
+        val type = if (param.type!! == ExcelType.HSSF.name) ExcelType.HSSF else ExcelType.XSSF
         val title = if (param.title.isNullOrBlank()) null else param.title
 
         // 构造ExportParams
@@ -135,7 +137,8 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
      */
     @PreCheckPermission(value = ["{}:import", "{}:save"], mode = PreMode.OR)
     @ApiOperationSupport(order = 81, author = "AutoGenerate")
-    @ApiOperation(value = "导入Excel", notes = """
+    @ApiOperation(
+        value = "导入Excel", notes = """
     【注意】请求类型为form-data
     导入参数示例：
     ----------------------------------
@@ -149,7 +152,8 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
     needVerify：         【非必传】true, false。默认false, 是否需要校验上传的Excel
     lastOfInvalidRow：   【非必传】默认0, 最后的无效行数
     readRows：           【非必传】默认0, 手动控制读取的行数
-    """)
+    """
+    )
     @SysLog
     @ResponseBody
     @PostMapping(value = ["/import"])
@@ -158,7 +162,9 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
         // 判断文件类型是否是excel文件
         val typeName = try {
             FileTypeUtil.getType(file.inputStream, file.originalFilename)
-        } catch (e: Exception) { "" }
+        } catch (e: Exception) {
+            ""
+        }
         if (!typeName.equals("xls", true) && !typeName.equals("xlsx", true)) {
             return fail("不允许的文件类型")
         }
@@ -173,7 +179,8 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
         // 获取导入的数据
         val list: MutableList<ImportBean> = if (importParams.isNeedVerify) {
             // 解析并校验导入的excel数据
-            val result = ExcelImportUtil.importExcelMore<ImportBean>(file.inputStream, getImportExcelClass(), importParams)
+            val result =
+                ExcelImportUtil.importExcelMore<ImportBean>(file.inputStream, getImportExcelClass(), importParams)
 
             // 有校验不通过的数据是否直接返回
             if (result.isVerifyFail && verifyFailReturn) {
@@ -212,7 +219,7 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
             if (value.isNullOrBlank()) continue
 
             // 如果参数名和importParams参数名匹配，则设置值
-            when(name) {
+            when (name) {
                 // 表格标题行数,默认0 见文章：https://blog.csdn.net/weixin_43009990/article/details/106609660
                 "titleRows" -> importParams.titleRows = Convert.toInt(value, 0)
                 // 表头行数,默认1
@@ -245,7 +252,7 @@ interface ImportController<ImportBean: ImportPoi, Entity>: BaseController<Entity
      * 例如设置excel验证规则、校验组、校验处理接口等
      *  @param importParams 导入参数
      */
-    fun enhanceImportParams(importParams: ImportParams) { }
+    fun enhanceImportParams(importParams: ImportParams) {}
 
     /**
      * 处理导入数据

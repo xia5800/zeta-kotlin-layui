@@ -4,10 +4,10 @@ import cn.dev33.satoken.stp.StpUtil
 import cn.hutool.core.bean.BeanUtil
 import com.github.xiaoymin.knife4j.annotations.ApiSupport
 import com.wf.captcha.utils.CaptchaUtil
-import com.zeta.system.model.entity.SysUser
-import com.zeta.system.model.enumeration.UserStateEnum
-import com.zeta.system.model.param.LoginParam
 import com.zeta.system.model.dto.sysUser.LoginUserDTO
+import com.zeta.system.model.entity.SysUser
+import com.zeta.system.model.enums.UserStateEnum
+import com.zeta.system.model.param.LoginParam
 import com.zeta.system.service.ISysUserService
 import io.swagger.annotations.Api
 import io.swagger.annotations.ApiOperation
@@ -22,8 +22,9 @@ import org.zetaframework.base.controller.view.DefaultView
 import org.zetaframework.base.result.ApiResult
 import org.zetaframework.core.exception.ArgumentException
 import org.zetaframework.core.log.enums.LoginStateEnum
-import org.zetaframework.core.log.event.SysLoginEvent
-import org.zetaframework.core.log.model.SysLoginLogDTO
+import org.zetaframework.core.log.event.LoginEvent
+import org.zetaframework.core.log.model.LoginLogDTO
+import org.zetaframework.core.redis.annotation.Limit
 import org.zetaframework.core.utils.ContextUtil
 import javax.servlet.http.HttpServletRequest
 import javax.servlet.http.HttpServletResponse
@@ -35,17 +36,19 @@ import javax.servlet.http.HttpServletResponse
 @ApiSupport(order = 1)
 @Api(tags = ["登录认证"])
 @Controller
-class MainController(private val applicationContext: ApplicationContext):
+class MainController(private val applicationContext: ApplicationContext) :
     SuperSimpleController<ISysUserService, SysUser>(),
     DefaultView
 {
 
     /**
      * 用户登录
-     * @param param LoginParam
+     *
+     * @param param LoginParam 登录参数
+     * @param request HttpServletRequest
      * @return ApiResult<String>
      */
-    @ApiOperation("登录")
+    @ApiOperation(value = "登录")
     @ResponseBody
     @PostMapping("/login")
     fun login(@Validated param: LoginParam, request: HttpServletRequest): ApiResult<String> {
@@ -60,18 +63,26 @@ class MainController(private val applicationContext: ApplicationContext):
         ContextUtil.setUserId(user.id!!)
 
         // 判断密码
-        if(!service.comparePassword(param.password!!, user.password!!)) {
-            applicationContext.publishEvent(SysLoginEvent(SysLoginLogDTO.loginFail(
-                param.account!!, LoginStateEnum.ERROR_PWD, request
-            )))
+        if (!service.comparePassword(param.password!!, user.password!!)) {
+            applicationContext.publishEvent(
+                LoginEvent(
+                    LoginLogDTO.loginFail(
+                        param.account!!, LoginStateEnum.ERROR_PWD, request
+                    )
+                )
+            )
             // 密码不正确
             return fail(LoginStateEnum.ERROR_PWD.desc)
         }
         // 判断用户状态
-        if(user.state == UserStateEnum.FORBIDDEN.code) {
-            applicationContext.publishEvent(SysLoginEvent(SysLoginLogDTO.loginFail(
-                param.account!!, LoginStateEnum.FAIL, "用户被禁用，无法登录", request
-            )))
+        if (user.state == UserStateEnum.FORBIDDEN.code) {
+            applicationContext.publishEvent(
+                LoginEvent(
+                    LoginLogDTO.loginFail(
+                        param.account!!, LoginStateEnum.FAIL, "用户被禁用，无法登录", request
+                    )
+                )
+            )
             return fail("用户被禁用，无法登录")
         }
 
@@ -84,7 +95,7 @@ class MainController(private val applicationContext: ApplicationContext):
         StpUtil.getSession()["user"] = userDto
 
         // 登录日志
-        applicationContext.publishEvent(SysLoginEvent(SysLoginLogDTO.loginSuccess(param.account!!, request = request)))
+        applicationContext.publishEvent(LoginEvent(LoginLogDTO.loginSuccess(param.account!!, request = request)))
         return success("登录成功")
     }
 
@@ -93,16 +104,20 @@ class MainController(private val applicationContext: ApplicationContext):
      * 注销登录
      * @return ApiResult<Boolean>
      */
-    @ApiOperation("注销登录")
+    @ApiOperation(value = "注销登录")
     @ResponseBody
     @GetMapping("/logout")
     fun logout(request: HttpServletRequest): ApiResult<Boolean> {
         val user = service.getById(StpUtil.getLoginIdAsLong()) ?: throw ArgumentException("用户不存在")
 
         // 登出日志
-        applicationContext.publishEvent(SysLoginEvent(SysLoginLogDTO.loginFail(
-            user.account ?: "", LoginStateEnum.LOGOUT, request
-        )))
+        applicationContext.publishEvent(
+            LoginEvent(
+                LoginLogDTO.loginFail(
+                    user.account ?: "", LoginStateEnum.LOGOUT, request
+                )
+            )
+        )
 
         // 注销登录
         StpUtil.logout()
@@ -113,10 +128,13 @@ class MainController(private val applicationContext: ApplicationContext):
     /**
      * 图形验证码
      *
+     * 说明：
+     * 限流规则一分钟十次调用
      * @param request
      * @param response
      */
-    @ApiOperation("图形验证码")
+    @Limit(name = "验证码接口限流", count = 10, describe = "您的操作过于频繁，请稍后再试")
+    @ApiOperation(value = "图形验证码")
     @GetMapping("/assets/captcha")
     fun captcha(request: HttpServletRequest, response: HttpServletResponse) {
         CaptchaUtil.out(5, request, response)

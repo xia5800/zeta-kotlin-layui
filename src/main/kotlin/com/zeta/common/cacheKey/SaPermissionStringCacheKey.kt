@@ -12,7 +12,7 @@ import java.time.Duration
  * @author gcc
  */
 @Component
-class SaPermissionStringCacheKey(private val redisTemplate: RedisTemplate<String, Any>): StringCacheKey {
+class SaPermissionStringCacheKey(private val redisTemplate: RedisTemplate<String, Any>) : StringCacheKey {
 
     /**
      * key 前缀

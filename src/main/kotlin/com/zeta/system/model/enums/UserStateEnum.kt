@@ -1,4 +1,4 @@
-package com.zeta.system.model.enumeration
+package com.zeta.system.model.enums
 
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
@@ -9,13 +9,14 @@ import io.swagger.annotations.ApiModelProperty
  */
 @ApiModel(description = "用户状态 枚举")
 enum class UserStateEnum(
-    @ApiModelProperty("状态码")
+    @ApiModelProperty(value = "状态码")
     var code: Int,
-    @ApiModelProperty("状态描述")
-    var msg: String)
-{
+    @ApiModelProperty(value = "状态描述")
+    var msg: String
+) {
     /** 正常 */
     NORMAL(0, "正常"),
+
     /** 禁用 */
     FORBIDDEN(1, "禁用");
 

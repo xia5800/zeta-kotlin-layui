@@ -29,7 +29,7 @@ import java.time.Duration
  * @author gcc
  */
 @Component
-class CaptchaStringCacheKey(private val redisTemplate: RedisTemplate<String, Any>): StringCacheKey {
+class CaptchaStringCacheKey(private val redisTemplate: RedisTemplate<String, Any>) : StringCacheKey {
 
     /**
      * key 前缀

@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
  * 跳转到`modules/index.html`用
  * @author gcc
  */
-interface IndexView<Entity>: BaseController<Entity> {
+interface IndexView<Entity> : BaseController<Entity> {
 
     /**
      * 主页
@@ -41,7 +41,7 @@ interface IndexView<Entity>: BaseController<Entity> {
      * @param entity 实体类 路由后面携带的参数会被封装到实体类里面。当然得是实体类中的字段才行
      * @param request 请求对象
      */
-    fun beforeIndexView(model: Model, entity: Entity?, request: HttpServletRequest) { }
+    fun beforeIndexView(model: Model, entity: Entity?, request: HttpServletRequest) {}
 
 
 }

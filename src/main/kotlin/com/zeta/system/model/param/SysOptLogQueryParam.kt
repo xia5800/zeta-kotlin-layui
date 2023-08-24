@@ -4,9 +4,7 @@ import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 
 /**
- * <p>
  * 操作日志 查询参数
- * </p>
  *
  * @author gcc
  * @date 2022-03-18 15:27:15
@@ -58,6 +56,10 @@ data class SysOptLogQueryParam(
     /** ip地址 */
     @ApiModelProperty(value = "ip地址")
     var ip: String? = null,
+
+    /** ip所在地区 */
+    @ApiModelProperty(value = "ip所在地区")
+    var ipRegion: String? = null,
 
     /** 创建时间 开始 */
     @ApiModelProperty(value = "创建时间 开始")

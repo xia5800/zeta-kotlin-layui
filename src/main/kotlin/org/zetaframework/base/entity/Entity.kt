@@ -22,7 +22,7 @@ abstract class Entity<T>(
     @ApiModelProperty(value = "最后修改人ID")
     @TableField(value = UPDATED_BY_COLUMN, fill = FieldFill.INSERT_UPDATE)
     open var updatedBy: T? = null,
-): SuperEntity<T>() {
+) : SuperEntity<T>() {
 
     companion object {
         const val UPDATE_TIME = "updateTime"

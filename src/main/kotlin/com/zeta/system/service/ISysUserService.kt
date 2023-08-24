@@ -2,9 +2,13 @@ package com.zeta.system.service
 
 import com.baomidou.mybatisplus.extension.service.IService
 import com.zeta.system.model.dto.sysRole.SysRoleDTO
+import com.zeta.system.model.dto.sysUser.SysUserDTO
 import com.zeta.system.model.dto.sysUser.SysUserSaveDTO
 import com.zeta.system.model.dto.sysUser.SysUserUpdateDTO
 import com.zeta.system.model.entity.SysUser
+import com.zeta.system.model.param.SysUserQueryParam
+import org.zetaframework.base.param.PageParam
+import org.zetaframework.base.result.PageResult
 
 /**
  * 用户 服务类
@@ -13,6 +17,14 @@ import com.zeta.system.model.entity.SysUser
  * @date 2021-12-30 15:24:03
  */
 interface ISysUserService : IService<SysUser> {
+
+    /**
+     * 自定义分页查询
+     *
+     * @param param 分页查询参数
+     * @return PageResult<SysUserDTO>
+     */
+    fun customPage(param: PageParam, queryParam: SysUserQueryParam?): PageResult<SysUserDTO>
 
     /**
      * 添加用户
@@ -31,14 +43,14 @@ interface ISysUserService : IService<SysUser> {
     /**
      * 获取用户角色
      *
-     * @param userId Long
+     * @param userId 用户id
      * @return List<SysRole?>
      */
     fun getUserRoles(userId: Long): List<SysRoleDTO>
 
     /**
      * 批量获取用户角色
-     * @param userIds List<Long>
+     * @param userIds 用户id列表
      * @return Map<Long, List<SysRole?>>
      */
     fun getUserRoles(userIds: List<Long>): Map<Long, List<SysRoleDTO>>
@@ -67,5 +79,14 @@ interface ISysUserService : IService<SysUser> {
      * @return Boolean
      */
     fun comparePassword(inputPwd: String, dbPwd: String): Boolean
+
+
+    /**
+     * 批量导入用户
+     *
+     * @param userList 待导入的用户列表
+     * @return Boolean
+     */
+    fun batchImportUser(userList: List<SysUser>): Boolean
 
 }

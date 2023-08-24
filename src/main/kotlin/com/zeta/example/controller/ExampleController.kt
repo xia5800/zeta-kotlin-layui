@@ -4,8 +4,8 @@ import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PathVariable
 import org.springframework.web.bind.annotation.RequestMapping
-import org.zetaframework.base.controller.crud.SuperBaseController
-import org.zetaframework.base.controller.crud.goView
+import org.zetaframework.base.controller.SuperBaseController
+import org.zetaframework.base.controller.goView
 import springfox.documentation.annotations.ApiIgnore
 
 /**
@@ -16,7 +16,7 @@ import springfox.documentation.annotations.ApiIgnore
 @ApiIgnore // swagger不显示这个类的接口
 @Controller
 @RequestMapping("/example")
-class ExampleController: SuperBaseController {
+class ExampleController : SuperBaseController {
 
     /**
      * 当前模块路径

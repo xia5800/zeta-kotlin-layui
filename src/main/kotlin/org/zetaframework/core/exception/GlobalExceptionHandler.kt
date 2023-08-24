@@ -4,7 +4,6 @@ import cn.dev33.satoken.context.SaHolder
 import cn.dev33.satoken.exception.NotLoginException
 import cn.dev33.satoken.exception.NotPermissionException
 import cn.dev33.satoken.exception.NotRoleException
-import cn.dev33.satoken.exception.SaTokenException
 import cn.hutool.core.util.StrUtil
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus

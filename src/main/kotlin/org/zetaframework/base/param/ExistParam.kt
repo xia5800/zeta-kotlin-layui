@@ -34,7 +34,7 @@ class ExistParam<Entity, Id> private constructor() {
     /**
      * 验证存在参数 构造方法
      */
-    constructor(field: String, value: String?, id: Id? = null): this() {
+    constructor(field: String, value: String?, id: Id? = null) : this() {
         this.field = field
         this.value = value
         this.id = id
@@ -46,7 +46,7 @@ class ExistParam<Entity, Id> private constructor() {
      *
      * @since 1.1.2 参考：[AbstractKtWrapper]的columnToString()方法
      */
-    constructor(field: KProperty<*>, value: String?, id: Id? = null): this() {
+    constructor(field: KProperty<*>, value: String?, id: Id? = null) : this() {
         this.field = field.name
         this.value = value
         this.id = id
@@ -96,7 +96,11 @@ class ExistParam<Entity, Id> private constructor() {
         }
 
         // 处理字段名，是否驼峰转下划线
-        val fieldName: String = if (isToUnderlineCase) { StrUtil.toUnderlineCase(field) } else { field!! }
+        val fieldName: String = if (isToUnderlineCase) {
+            StrUtil.toUnderlineCase(field)
+        } else {
+            field!!
+        }
 
         // 构造查询条件
         val queryWrapper: QueryWrapper<Entity> = QueryWrapper<Entity>()

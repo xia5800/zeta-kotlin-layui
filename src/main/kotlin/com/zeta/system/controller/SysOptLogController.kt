@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.springframework.web.bind.annotation.ResponseBody
 import org.zetaframework.base.controller.SuperSimpleController
-import org.zetaframework.base.controller.crud.goView
+import org.zetaframework.base.controller.goView
 import org.zetaframework.base.controller.view.IndexView
 import org.zetaframework.base.param.PageParam
 import org.zetaframework.base.result.PageResult
@@ -26,9 +26,7 @@ import springfox.documentation.annotations.ApiIgnore
 import javax.servlet.http.HttpServletRequest
 
 /**
- * <p>
  * 操作日志 前端控制器
- * </p>
  *
  * @author gcc
  * @date 2022-03-18 15:27:15

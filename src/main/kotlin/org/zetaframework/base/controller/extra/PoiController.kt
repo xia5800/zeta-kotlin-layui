@@ -15,10 +15,9 @@ import java.lang.reflect.Type
  *
  * @author gcc
  */
-interface PoiController<ImportBean: ImportPoi, ExportBean, Entity, QueryParam>:
+interface PoiController<ImportBean : ImportPoi, ExportBean, Entity, QueryParam> :
     ImportController<ImportBean, Entity>,
-    ExportController<ExportBean, Entity, QueryParam>
-{
+    ExportController<ExportBean, Entity, QueryParam> {
 
     /**
      * 获取导入实体的类型

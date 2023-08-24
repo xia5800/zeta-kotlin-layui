@@ -5,9 +5,7 @@ import io.swagger.annotations.ApiModelProperty
 import java.time.LocalDateTime
 
 /**
- * <p>
  * 字典 详情
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-04-15 10:38:20
@@ -50,8 +48,4 @@ data class SysDictDTO(
     /** 排序 */
     @ApiModelProperty(value = "排序")
     var sortValue: Int? = null,
-
-    /** 逻辑删除字段 */
-    @ApiModelProperty(value = "逻辑删除字段")
-    var deleted: Boolean? = null,
 )

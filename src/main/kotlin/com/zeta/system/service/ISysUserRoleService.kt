@@ -11,7 +11,7 @@ import com.zeta.system.model.entity.SysUserRole
  * @author AutoGenerator
  * @date 2021-12-30 15:24:03
  */
-interface ISysUserRoleService: IService<SysUserRole> {
+interface ISysUserRoleService : IService<SysUserRole> {
 
     /**
      * 根据用户id查询角色

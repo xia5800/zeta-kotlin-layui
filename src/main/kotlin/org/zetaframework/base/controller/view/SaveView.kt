@@ -14,7 +14,7 @@ import javax.servlet.http.HttpServletRequest
  * 跳转到`modules/save.html`用
  * @author gcc
  */
-interface SaveView<Entity>: BaseController<Entity> {
+interface SaveView<Entity> : BaseController<Entity> {
 
     /**
      * 新增页面
@@ -41,6 +41,6 @@ interface SaveView<Entity>: BaseController<Entity> {
      * @param entity 实体类 路由后面携带的参数会被封装到实体类里面。当然得是实体类中的字段才行
      * @param request 请求对象
      */
-    fun beforeSaveView(model: Model, entity: Entity?, request: HttpServletRequest) { }
+    fun beforeSaveView(model: Model, entity: Entity?, request: HttpServletRequest) {}
 
 }

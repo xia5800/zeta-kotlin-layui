@@ -5,7 +5,7 @@ import org.springframework.boot.web.servlet.error.ErrorController
 import org.springframework.stereotype.Controller
 import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.*
-import org.zetaframework.base.controller.crud.SuperBaseController
+import org.zetaframework.base.controller.SuperBaseController
 import org.zetaframework.base.controller.view.DefaultView
 import springfox.documentation.annotations.ApiIgnore
 
@@ -15,7 +15,7 @@ import springfox.documentation.annotations.ApiIgnore
  */
 @ApiIgnore // swagger不显示这个类的接口
 @Controller
-class IndexController: SuperBaseController, DefaultView, ErrorController {
+class IndexController : SuperBaseController, DefaultView, ErrorController {
 
     /**
      * 登录页面

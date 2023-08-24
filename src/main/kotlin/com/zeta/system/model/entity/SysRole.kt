@@ -4,6 +4,7 @@ import com.baomidou.mybatisplus.annotation.SqlCondition
 import com.baomidou.mybatisplus.annotation.TableField
 import com.baomidou.mybatisplus.annotation.TableLogic
 import com.baomidou.mybatisplus.annotation.TableName
+import com.fasterxml.jackson.annotation.JsonIgnore
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
 import org.zetaframework.base.entity.Entity
@@ -16,29 +17,31 @@ import org.zetaframework.base.entity.Entity
  */
 @ApiModel(description = "角色")
 @TableName(value = "sys_role")
-class SysRole: Entity<Long>() {
+class SysRole : Entity<Long>() {
+
     /** 角色名 */
-    @ApiModelProperty("角色名")
+    @ApiModelProperty(value = "角色名", required = true)
     @TableField(value = "name", condition = SqlCondition.LIKE)
     var name: String? = null
 
     /** 角色编码 */
-    @ApiModelProperty("角色编码")
+    @ApiModelProperty(value = "角色编码", required = true)
     @TableField(value = "code", condition = SqlCondition.LIKE)
     var code: String? = null
 
     /** 描述 */
-    @ApiModelProperty("描述")
+    @ApiModelProperty(value = "描述", required = false)
     @TableField(value = "describe_", condition = SqlCondition.LIKE)
     var describe: String? = null
 
-    /** 是否内置 true or false */
-    @ApiModelProperty("是否内置 true or false")
+    /** 是否内置 0否 1是 */
+    @ApiModelProperty(value = "是否内置 0否 1是", required = false)
     @TableField(value = "readonly_")
     var readonly: Boolean? = null
 
-    /** 是否删除 true or false  */
-    @ApiModelProperty("是否删除 true or false")
+    /** 逻辑删除字段 */
+    @JsonIgnore
+    @ApiModelProperty(value = "逻辑删除字段", hidden = true)
     @TableLogic
     var deleted: Boolean? = null
 

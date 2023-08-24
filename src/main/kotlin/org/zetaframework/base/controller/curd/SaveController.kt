@@ -20,7 +20,7 @@ import org.zetaframework.core.saToken.annotation.PreMode
  * @param <SaveDTO> 保存对象
  * @author gcc
  */
-interface SaveController<Entity, SaveDTO>: BaseController<Entity> {
+interface SaveController<Entity, SaveDTO> : BaseController<Entity> {
 
     /**
      * 新增

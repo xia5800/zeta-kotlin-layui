@@ -13,7 +13,7 @@ import org.zetaframework.base.controller.SuperBaseController
  *
  * @author gcc
  */
-interface DefaultView: SuperBaseController {
+interface DefaultView : SuperBaseController {
 
     /**
      * 当前模块路径

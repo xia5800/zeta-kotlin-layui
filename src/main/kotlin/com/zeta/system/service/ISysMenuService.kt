@@ -9,6 +9,6 @@ import com.zeta.system.model.entity.SysMenu
  * @author AutoGenerator
  * @date 2021-12-30 15:24:03
  */
-interface ISysMenuService: IService<SysMenu> {
+interface ISysMenuService : IService<SysMenu> {
 
 }

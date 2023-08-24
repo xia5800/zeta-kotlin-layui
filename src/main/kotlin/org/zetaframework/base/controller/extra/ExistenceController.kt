@@ -17,7 +17,7 @@ import org.zetaframework.core.saToken.annotation.PreCheckPermission
  * @param <Id>     主键字段类型
  * @author gcc
  */
-interface ExistenceController<Entity, Id>: BaseController<Entity> {
+interface ExistenceController<Entity, Id> : BaseController<Entity> {
 
     /**
      * 验证字段是否存在
@@ -25,14 +25,16 @@ interface ExistenceController<Entity, Id>: BaseController<Entity> {
      * @return ApiResult<Boolean>
      */
     @PreCheckPermission(value = ["{}:view"])
-    @ApiOperation(value = "验证字段是否存在", notes = """
+    @ApiOperation(
+        value = "验证字段是否存在", notes = """
     例如：
     新增用户的时候，验证用户名(username)的值(张三)是否被人使用了
     {"field": "username",  "value": "张三"}
 
     修改用户的时候，验证用户名(username)的值(李四)是否被除了当前用户id(2011214167781)的人使用了
     {"field": "username",  "value": "李四",  "id": "2011214167781"}
-    """)
+    """
+    )
     @ResponseBody
     @PostMapping("/existence")
     fun existence(@RequestBody @Validated param: ExistParam<Entity, Id>): ApiResult<Boolean> {

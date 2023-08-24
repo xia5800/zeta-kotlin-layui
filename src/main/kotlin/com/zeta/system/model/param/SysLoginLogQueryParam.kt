@@ -5,9 +5,7 @@ import io.swagger.annotations.ApiModelProperty
 import java.time.LocalDateTime
 
 /**
- * <p>
  * 登录日志 查询参数
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-03-21 16:33:13
@@ -54,6 +52,10 @@ data class SysLoginLogQueryParam(
     /** ip地址 */
     @ApiModelProperty(value = "ip地址")
     var ip: String? = null,
+
+    /** ip所在地区 */
+    @ApiModelProperty(value = "ip所在地区")
+    var ipRegion: String? = null,
 
     /** 创建时间 开始 */
     @ApiModelProperty(value = "创建时间 开始")

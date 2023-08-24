@@ -8,15 +8,13 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 
 /**
- * <p>
  * 字典 服务实现类
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-04-15 10:12:09
  */
 @Service
-class SysDictServiceImpl: ISysDictService, ServiceImpl<SysDictMapper, SysDict>() {
+class SysDictServiceImpl : ISysDictService, ServiceImpl<SysDictMapper, SysDict>() {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
 

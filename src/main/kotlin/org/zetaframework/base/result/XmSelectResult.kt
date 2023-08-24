@@ -26,11 +26,11 @@ class XmSelectResult private constructor() {
     var data: List<XmSelect>? = mutableListOf()
 
 
-    constructor(data: List<XmSelect>?): this(ErrorCodeEnum.OK, data) {
+    constructor(data: List<XmSelect>?) : this(ErrorCodeEnum.OK, data) {
         this.data = data
     }
 
-    constructor(errorCodeEnum: ErrorCodeEnum, data: List<XmSelect>? = mutableListOf()): this() {
+    constructor(errorCodeEnum: ErrorCodeEnum, data: List<XmSelect>? = mutableListOf()) : this() {
         this.code = errorCodeEnum.code
         this.msg = errorCodeEnum.msg
         this.data = data
@@ -50,17 +50,17 @@ class XmSelectResult private constructor() {
  * @author gcc
  */
 @ApiModel(description = "XmSelect类")
-class XmSelect: TreeEntity<XmSelect, Long>() {
+class XmSelect : TreeEntity<XmSelect, Long>() {
 
     /** 名称 */
     @ApiModelProperty(value = "名称")
     var name: String? = null
-    get() = this.title
+        get() = this.title
 
     /** 值 */
     @ApiModelProperty(value = "值")
     var value: Long? = null
-    get() = this.id
+        get() = this.id
 
     /** 是否选中 */
     @ApiModelProperty(value = "是否选中")

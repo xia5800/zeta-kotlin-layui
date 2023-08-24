@@ -19,7 +19,7 @@ import java.io.Serializable
  * @param <Id>     主键字段类型
  * @author gcc
  */
-interface DeleteController<Entity, Id: Serializable>: BaseController<Entity> {
+interface DeleteController<Entity, Id : Serializable> : BaseController<Entity> {
 
     /**
      * 单体删除

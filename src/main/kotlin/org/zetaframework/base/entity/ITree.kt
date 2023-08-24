@@ -11,7 +11,7 @@ import java.io.Serializable
  *
  * @author gcc
  */
-interface ITree<E, T: Serializable> {
+interface ITree<E, T : Serializable> {
 
     /**
      * 获取树节点id

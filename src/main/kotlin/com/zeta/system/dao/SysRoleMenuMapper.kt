@@ -13,7 +13,7 @@ import org.springframework.stereotype.Repository
  * @date 2021-12-30 15:24:03
  */
 @Repository
-interface SysRoleMenuMapper: BaseMapper<SysRoleMenu> {
+interface SysRoleMenuMapper : BaseMapper<SysRoleMenu> {
 
     /**
      * 查询用户对应的菜单
@@ -22,8 +22,10 @@ interface SysRoleMenuMapper: BaseMapper<SysRoleMenu> {
      * @param menuType String?
      * @return List<Menu?>
      */
-    fun listMenuByUserId(@Param("userId")userId: Long,
-                         @Param("menuType")menuType: List<Int>?): MutableList<SysMenu>
+    fun listMenuByUserId(
+        @Param("userId") userId: Long,
+        @Param("menuType") menuType: List<Int>?
+    ): MutableList<SysMenu>
 
     /**
      * 根据角色id查询菜单
@@ -32,7 +34,9 @@ interface SysRoleMenuMapper: BaseMapper<SysRoleMenu> {
      * @param menuType  菜单类型
      * @return List<Menu>
      */
-    fun listMenuByRoleIds(@Param("roleIds")roleIds: List<Long>,
-                          @Param("menuType")menuType: List<Int>?): MutableList<SysMenu>
+    fun listMenuByRoleIds(
+        @Param("roleIds") roleIds: List<Long>,
+        @Param("menuType") menuType: List<Int>?
+    ): MutableList<SysMenu>
 
 }

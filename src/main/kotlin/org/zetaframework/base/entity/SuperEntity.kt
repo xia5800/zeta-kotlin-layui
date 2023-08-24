@@ -21,7 +21,7 @@ abstract class SuperEntity<T>(
     /** id */
     @TableId(value = FIELD_ID, type = IdType.INPUT)
     @ApiModelProperty(value = "主键")
-    @get:NotNull(message = "id不能为空",groups = [Update::class])
+    @get:NotNull(message = "id不能为空", groups = [Update::class])
     open var id: T? = null,
 
     /** 创建时间 */
@@ -33,7 +33,7 @@ abstract class SuperEntity<T>(
     @ApiModelProperty(value = "创建人ID")
     @TableField(value = CREATED_BY_COLUMN, fill = FieldFill.INSERT)
     open var createdBy: T? = null,
-): Serializable {
+) : Serializable {
 
     companion object {
         const val FIELD_ID = "id"

@@ -21,7 +21,7 @@ import org.zetaframework.core.validation.group.Update
  * @param <UpdateDTO> 修改对象
  * @author gcc
  */
-interface UpdateController<Entity, UpdateDTO>: BaseController<Entity> {
+interface UpdateController<Entity, UpdateDTO> : BaseController<Entity> {
 
     /**
      * 修改

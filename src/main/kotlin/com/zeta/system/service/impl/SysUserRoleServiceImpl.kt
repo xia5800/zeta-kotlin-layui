@@ -19,7 +19,7 @@ import org.springframework.transaction.annotation.Transactional
  * @date 2021-12-30 15:24:03
  */
 @Service
-class SysUserRoleServiceImpl: ISysUserRoleService, ServiceImpl<SysUserRoleMapper, SysUserRole>() {
+class SysUserRoleServiceImpl : ISysUserRoleService, ServiceImpl<SysUserRoleMapper, SysUserRole>() {
     private val logger: Logger = LoggerFactory.getLogger(this::class.java)
 
     /**
@@ -54,7 +54,7 @@ class SysUserRoleServiceImpl: ISysUserRoleService, ServiceImpl<SysUserRoleMapper
         // 删除用户角色关联
         this.remove(KtQueryWrapper(SysUserRole()).eq(SysUserRole::userId, userId))
 
-        if(roleIds == null || roleIds.isEmpty()) {
+        if (roleIds.isNullOrEmpty()) {
             return true;
         }
 

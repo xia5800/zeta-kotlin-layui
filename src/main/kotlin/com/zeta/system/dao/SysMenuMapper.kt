@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository
  * @date 2021-12-30 15:24:03
  */
 @Repository
-interface SysMenuMapper: BaseMapper<SysMenu> {
+interface SysMenuMapper : BaseMapper<SysMenu> {
 
 }

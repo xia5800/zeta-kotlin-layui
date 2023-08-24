@@ -11,18 +11,16 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.zetaframework.base.param.PageParam
 import org.zetaframework.base.result.PageResult
-import org.zetaframework.core.log.model.SysLogDTO
+import org.zetaframework.core.log.model.LogDTO
 
 /**
- * <p>
  * 操作日志 服务实现类
- * </p>
  *
  * @author gcc
  * @date 2022-03-18 15:27:15
  */
 @Service
-class SysOptLogServiceImpl: ISysOptLogService, ServiceImpl<SysOptLogMapper, SysOptLog>() {
+class SysOptLogServiceImpl : ISysOptLogService, ServiceImpl<SysOptLogMapper, SysOptLog>() {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     /**
@@ -30,10 +28,10 @@ class SysOptLogServiceImpl: ISysOptLogService, ServiceImpl<SysOptLogMapper, SysO
      *
      * 说明：
      * [@SysLog]注解的业务实现
-     * @param org.zetaframework.core.log.model.SysLogDTO
+     * @param logDTO [LogDTO]
      */
-    override fun save(sysLogDTO: SysLogDTO) {
-        val optLog = BeanUtil.toBean(sysLogDTO, SysOptLog::class.java)
+    override fun save(logDTO: LogDTO) {
+        val optLog = BeanUtil.toBean(logDTO, SysOptLog::class.java)
         this.save(optLog)
     }
 

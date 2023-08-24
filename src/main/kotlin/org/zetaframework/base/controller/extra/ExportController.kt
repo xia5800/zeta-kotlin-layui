@@ -32,7 +32,7 @@ import javax.servlet.http.HttpServletResponse
  *
  * @author gcc
  */
-interface ExportController<ExportBean, Entity, QueryParam>: BaseController<Entity> {
+interface ExportController<ExportBean, Entity, QueryParam> : BaseController<Entity> {
 
     /**
      * 获取导出实体的类型
@@ -54,7 +54,8 @@ interface ExportController<ExportBean, Entity, QueryParam>: BaseController<Entit
      */
     @PreCheckPermission(value = ["{}:export", "{}:view"], mode = PreMode.OR)
     @ApiOperationSupport(order = 85, author = "AutoGenerate")
-    @ApiOperation(value = "导出Excel", notes = """
+    @ApiOperation(
+        value = "导出Excel", notes = """
     导出参数示例：
     {
       "fileName": "用户列表",   // 【必传】excel的文件名
@@ -63,11 +64,16 @@ interface ExportController<ExportBean, Entity, QueryParam>: BaseController<Entit
       "title": "",            // 【非必传】第一页sheet表格的表头
       "type": "XSSF"          // 【必传】可选值：HSSF（excel97-2003版本，扩展名.xls）、XSSF（excel2007+版本，扩展名.xlsx）
     }
-    """)
+    """
+    )
     @ResponseBody
     @SysLog(response = false)
     @PostMapping(value = ["/export"], produces = ["application/octet-stream"])
-    fun exportExcel(@RequestBody @Validated params: ExportExcelParam<QueryParam>, request: HttpServletRequest, response: HttpServletResponse) {
+    fun exportExcel(
+        @RequestBody @Validated params: ExportExcelParam<QueryParam>,
+        request: HttpServletRequest,
+        response: HttpServletResponse
+    ) {
         val queryParam = params.queryParam ?: throw ArgumentException("查询条件不能为空")
         // 获取导出参数
         val exportParams = getExportParams(params)
@@ -93,7 +99,7 @@ interface ExportController<ExportBean, Entity, QueryParam>: BaseController<Entit
      */
     fun getExportParams(params: ExportExcelParam<QueryParam>): ExportParams {
         // 处理excel文件类型
-        val type = if (params.type!! == ExcelType.HSSF.name)  ExcelType.HSSF else  ExcelType.XSSF
+        val type = if (params.type!! == ExcelType.HSSF.name) ExcelType.HSSF else ExcelType.XSSF
         val title = if (params.title.isNullOrBlank()) null else params.title
         // 构造ExportParams
         val exportParams = ExportParams(title, params.sheetName ?: "sheet", type)
@@ -110,7 +116,7 @@ interface ExportController<ExportBean, Entity, QueryParam>: BaseController<Entit
      * 例如设置表格第二行的名称、冻结一些列、表头颜色等
      * @param exportParams 导出参数
      */
-    fun enhanceExportParams(exportParams: ExportParams) { }
+    fun enhanceExportParams(exportParams: ExportParams) {}
 
     /**
      * 获取待导出的数据

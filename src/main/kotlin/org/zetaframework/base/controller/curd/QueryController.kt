@@ -23,7 +23,7 @@ import java.io.Serializable
  * @param <QueryParam>   分页参数
  * @author gcc
  */
-interface QueryController<Entity, Id: Serializable, QueryParam> : PageController<Entity, QueryParam> {
+interface QueryController<Entity, Id : Serializable, QueryParam> : PageController<Entity, QueryParam> {
 
     /**
      * 分页查询
@@ -78,7 +78,7 @@ interface QueryController<Entity, Id: Serializable, QueryParam> : PageController
      * 处理批量查询数据
      * @param list MutableList<Entity>
      */
-    fun handlerBatchData(list: MutableList<Entity>) { }
+    fun handlerBatchData(list: MutableList<Entity>) {}
 
 
     /**
@@ -105,6 +105,6 @@ interface QueryController<Entity, Id: Serializable, QueryParam> : PageController
      *
      * @param entity Entity
      */
-    fun handlerGetData(entity: Entity?) { }
+    fun handlerGetData(entity: Entity?) {}
 
 }

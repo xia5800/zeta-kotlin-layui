@@ -5,9 +5,7 @@ import io.swagger.annotations.ApiModelProperty
 import java.time.LocalDateTime
 
 /**
- * <p>
  * 字典 查询参数
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-04-15 10:38:20
@@ -51,4 +49,4 @@ data class SysDictQueryParam(
     @ApiModelProperty(value = "排序")
     var sortValue: Int? = null,
 
-)
+    )

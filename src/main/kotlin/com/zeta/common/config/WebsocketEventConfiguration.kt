@@ -18,7 +18,7 @@ class WebsocketEventConfiguration {
 
     @Bean
     fun wsUserEventListener(): WsUserEventListener = WsUserEventListener { user, userType ->
-        when(userType) {
+        when (userType) {
             WsUserTypeEnum.ONLINE -> logger.info("websocket用户上线：${user?.userId}")
             WsUserTypeEnum.OFFLINE -> logger.info("websocket用户离线：${user?.userId}")
         }

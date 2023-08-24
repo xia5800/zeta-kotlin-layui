@@ -7,7 +7,7 @@ import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport
 import com.zeta.system.model.dto.sysRoleMenu.SysRoleMenuHandleDTO
 import com.zeta.system.model.entity.SysMenu
 import com.zeta.system.model.entity.SysRoleMenu
-import com.zeta.system.model.enumeration.MenuTypeEnum
+import com.zeta.system.model.enums.MenuTypeEnum
 import com.zeta.system.service.ISysMenuService
 import com.zeta.system.service.ISysRoleMenuService
 import io.swagger.annotations.Api
@@ -21,8 +21,9 @@ import org.zetaframework.base.controller.view.DefaultView
 import org.zetaframework.base.result.ApiResult
 import org.zetaframework.base.result.DTree
 import org.zetaframework.base.result.DTreeResult
+import org.zetaframework.core.saToken.annotation.PreAuth
 import org.zetaframework.core.saToken.annotation.PreCheckPermission
-import org.zetaframework.core.utils.TreeUtil
+import org.zetaframework.core.saToken.annotation.PreMode
 
 /**
  * 角色菜单 前端控制器
@@ -31,6 +32,7 @@ import org.zetaframework.core.utils.TreeUtil
  * @date 2021-12-30 15:24:03
  */
 @Api(tags = ["角色菜单"])
+@PreAuth(replace = "sys:role")
 @Controller
 @RequestMapping("/system/roleMenu")
 class SysRoleMenuController(
@@ -68,7 +70,7 @@ class SysRoleMenuController(
             // 构造Dtree对象，并判断该对象复选框是否选中。
             // ps: 因为menu是TreeEntity对象，DTree也是TreeEntity对象。Dtree组件所需的id、parentId、title都有，所以可以直接BeanCopy
             val dTree = BeanUtil.toBean(menu, DTree::class.java)
-            dTree.checkArr = mutableListOf(DTree.CheckArr(checked =  if (checked) "1" else "0"))
+            dTree.checkArr = mutableListOf(DTree.CheckArr(checked = if (checked) "1" else "0"))
             dTree.iconClass = menu.icon
             dTree.last = menu.type == MenuTypeEnum.RESOURCE.code
             dTrees.add(dTree)
@@ -83,7 +85,7 @@ class SysRoleMenuController(
      * @param roleMenuHandleDto SysRoleMenuHandleDTO 批量新增、修改角色菜单关联关系参数
      * @return ApiResult<Boolean>
      */
-    @PreCheckPermission(value = ["sys:role:save", "sys:role:update"]) // 同时有新增、修改角色权限
+    @PreCheckPermission(value = ["{}:edit", "{}:update"], mode = PreMode.OR)
     @ApiOperationSupport(order = 2)
     @ApiOperation(value = "新增或修改")
     @ResponseBody
@@ -91,10 +93,11 @@ class SysRoleMenuController(
     fun update(@RequestBody @Validated roleMenuHandleDto: SysRoleMenuHandleDTO): ApiResult<Boolean> {
         // 修改前先删除角色所有权限
         service.remove(KtQueryWrapper(SysRoleMenu()).eq(SysRoleMenu::roleId, roleMenuHandleDto.roleId))
+
+        // 重新关联角色权限
         if (CollUtil.isNotEmpty(roleMenuHandleDto.menuIds)) {
-            val batchList = mutableListOf<SysRoleMenu>()
-            roleMenuHandleDto.menuIds!!.forEach {
-                batchList.add(SysRoleMenu(roleMenuHandleDto.roleId, it))
+            val batchList: List<SysRoleMenu> = roleMenuHandleDto.menuIds!!.map {
+                SysRoleMenu(roleMenuHandleDto.roleId, it)
             }
             if (!service.saveBatch(batchList)) return fail("操作失败")
         }

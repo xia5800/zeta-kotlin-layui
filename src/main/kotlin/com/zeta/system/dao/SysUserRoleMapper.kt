@@ -14,7 +14,7 @@ import org.springframework.stereotype.Repository
  * @date 2021-12-30 15:24:03
  */
 @Repository
-interface SysUserRoleMapper: BaseMapper<SysUserRole> {
+interface SysUserRoleMapper : BaseMapper<SysUserRole> {
 
     /**
      * 根据用户id查询角色

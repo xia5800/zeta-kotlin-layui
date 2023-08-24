@@ -10,7 +10,7 @@ import com.zeta.system.model.entity.SysRoleMenu
  * @author AutoGenerator
  * @date 2021-12-30 15:24:03
  */
-interface ISysRoleMenuService: IService<SysRoleMenu> {
+interface ISysRoleMenuService : IService<SysRoleMenu> {
 
     /**
      * 查询用户对应的菜单

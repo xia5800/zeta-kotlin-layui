@@ -10,26 +10,24 @@ import org.slf4j.LoggerFactory
 import org.springframework.stereotype.Service
 import org.zetaframework.base.param.PageParam
 import org.zetaframework.base.result.PageResult
-import org.zetaframework.core.log.model.SysLoginLogDTO
+import org.zetaframework.core.log.model.LoginLogDTO
 
 /**
- * <p>
  * 登录日志 服务实现类
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-03-21 16:33:13
  */
 @Service
-class SysLoginLogServiceImpl: ISysLoginLogService, ServiceImpl<SysLoginLogMapper, SysLoginLog>() {
+class SysLoginLogServiceImpl : ISysLoginLogService, ServiceImpl<SysLoginLogMapper, SysLoginLog>() {
     private val logger = LoggerFactory.getLogger(this::class.java)
 
     /**
      * 保存用户登录日志
      *
-     * @param loginLogDTO [SysLoginLogDTO]
+     * @param loginLogDTO [LoginLogDTO]
      */
-    override fun save(loginLogDTO: SysLoginLogDTO) {
+    override fun save(loginLogDTO: LoginLogDTO) {
         val loginLog = BeanUtil.toBean(loginLogDTO, SysLoginLog::class.java)
         loginLog.createdBy = loginLogDTO.userId
         this.save(loginLog)

@@ -12,11 +12,10 @@ import org.springframework.ui.Model
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.RequestMapping
 import org.zetaframework.base.controller.SuperAllViewController
-import org.zetaframework.base.controller.crud.goView
 import org.zetaframework.base.controller.extra.ExistenceController
+import org.zetaframework.base.controller.goView
 import org.zetaframework.base.param.ExistParam
 import org.zetaframework.base.result.ApiResult
-import org.zetaframework.core.exception.ArgumentException
 import org.zetaframework.core.exception.BusinessException
 import org.zetaframework.core.saToken.annotation.PreAuth
 import springfox.documentation.annotations.ApiIgnore
@@ -32,7 +31,7 @@ import javax.servlet.http.HttpServletRequest
 @PreAuth(replace = "sys:role")
 @Controller
 @RequestMapping("/system/role")
-class SysRoleController:
+class SysRoleController :
     SuperAllViewController<ISysRoleService, Long, SysRole, SysRoleQueryParam, SysRoleSaveDTO, SysRoleUpdateDTO>(),
     ExistenceController<SysRole, Long>
 {
@@ -87,7 +86,7 @@ class SysRoleController:
      */
     override fun handlerSave(saveDTO: SysRoleSaveDTO): ApiResult<Boolean> {
         // 判断是否存在
-        if(ExistParam<SysRole, Long>("code", saveDTO.code).isExist(service)) {
+        if (ExistParam<SysRole, Long>("code", saveDTO.code).isExist(service)) {
             return fail("角色编码已存在")
         }
 
@@ -103,13 +102,13 @@ class SysRoleController:
      */
     override fun handlerUpdate(updateDTO: SysRoleUpdateDTO): ApiResult<Boolean> {
         // 判断是否存在
-        if(ExistParam<SysRole, Long>("code", updateDTO.code, updateDTO.id).isExist(service)) {
+        if (ExistParam<SysRole, Long>("code", updateDTO.code, updateDTO.id).isExist(service)) {
             return fail("角色编码已存在")
         }
 
         // 判断角色是否允许修改
         val role = service.getById(updateDTO.id) ?: return fail("角色不存在")
-        if(role.readonly != null && role.readonly == true) {
+        if (role.readonly != null && role.readonly == true) {
             throw BusinessException("角色[${role.name}]禁止修改")
         }
 
@@ -125,7 +124,7 @@ class SysRoleController:
     override fun handlerDelete(id: Long): ApiResult<Boolean> {
         val role = service.getById(id) ?: return success(true)
         // 判断角色是否允许删除
-        if(role.readonly != null && role.readonly == true) {
+        if (role.readonly != null && role.readonly == true) {
             throw BusinessException("角色[${role.name}]禁止删除")
         }
 
@@ -142,7 +141,7 @@ class SysRoleController:
         val roleList = service.listByIds(ids) ?: return success(true)
         // 判断是否存在不允许删除的角色
         roleList.forEach { role ->
-            if(role.readonly != null && role.readonly == true) {
+            if (role.readonly != null && role.readonly == true) {
                 throw BusinessException("角色[${role.name}]禁止删除")
             }
         }

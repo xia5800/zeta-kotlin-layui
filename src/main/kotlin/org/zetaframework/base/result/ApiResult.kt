@@ -45,11 +45,16 @@ class ApiResult<T> {
 
     constructor(code: Int?) : this(code, null)
 
-    constructor(code: Int, msg: String?, data: T?, defExec: Boolean): this(code, msg, data) {
+    constructor(code: Int, msg: String?, data: T?, defExec: Boolean) : this(code, msg, data) {
         this.defExec = defExec
     }
 
-    constructor(code: Int? = ErrorCodeEnum.SUCCESS.code, message: String? = null, data: T? = null, error: String? = null) {
+    constructor(
+        code: Int? = ErrorCodeEnum.SUCCESS.code,
+        message: String? = null,
+        data: T? = null,
+        error: String? = null
+    ) {
         this.code = code
         this.message = message
         this.data = data
@@ -91,7 +96,11 @@ class ApiResult<T> {
          * @param data E?
          * @return ApiResult<E>
          */
-        fun <E> success(code: Int? = ErrorCodeEnum.SUCCESS.code, message: String? = ErrorCodeEnum.SUCCESS.msg, data: E? = null): ApiResult<E> {
+        fun <E> success(
+            code: Int? = ErrorCodeEnum.SUCCESS.code,
+            message: String? = ErrorCodeEnum.SUCCESS.msg,
+            data: E? = null
+        ): ApiResult<E> {
             return ApiResult(code, message, data)
         }
 
@@ -110,7 +119,11 @@ class ApiResult<T> {
          * @param data E?
          * @return ApiResult<E>
          */
-        fun <E> fail(code: Int? = ErrorCodeEnum.FAIL.code, message: String? = ErrorCodeEnum.FAIL.msg, data: E? = null): ApiResult<E> {
+        fun <E> fail(
+            code: Int? = ErrorCodeEnum.FAIL.code,
+            message: String? = ErrorCodeEnum.FAIL.msg,
+            data: E? = null
+        ): ApiResult<E> {
             return ApiResult(code, message, data)
         }
     }

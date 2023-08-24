@@ -11,7 +11,7 @@ import org.zetaframework.core.enums.ErrorCodeEnum
  * @author gcc
  */
 @ApiModel(description = "DTree返回结果")
-class DTreeResult private constructor(){
+class DTreeResult private constructor() {
 
     /** 状态码 */
     @ApiModelProperty(value = "状态码")
@@ -43,7 +43,7 @@ class DTreeResult private constructor(){
      * })
      * ```
      */
-    constructor(data: List<DTree>?): this(ErrorCodeEnum.OK, data) {
+    constructor(data: List<DTree>?) : this(ErrorCodeEnum.OK, data) {
         this.data = data
     }
 
@@ -60,7 +60,7 @@ class DTreeResult private constructor(){
      * })
      * ```
      */
-    constructor(errorCodeEnum: ErrorCodeEnum, data: List<DTree>? = mutableListOf()): this() {
+    constructor(errorCodeEnum: ErrorCodeEnum, data: List<DTree>? = mutableListOf()) : this() {
         this.code = errorCodeEnum.code
         this.msg = errorCodeEnum.msg
         this.data = data

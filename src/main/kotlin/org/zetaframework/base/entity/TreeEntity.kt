@@ -12,7 +12,7 @@ import javax.validation.constraints.NotEmpty
  *
  * @author gcc
  */
-abstract class TreeEntity<E, T: Serializable>(
+abstract class TreeEntity<E, T : Serializable>(
     /** 名称 */
     @ApiModelProperty(value = "名称")
     @get:NotEmpty(message = "名称不能为空")
@@ -33,7 +33,7 @@ abstract class TreeEntity<E, T: Serializable>(
     @ApiModelProperty(value = "子节点")
     @TableField(exist = false)
     open var children: MutableList<E>? = null
-): Entity<T>(), ITree<E, T> {
+) : Entity<T>(), ITree<E, T> {
 
     /**
      * 获取树节点id

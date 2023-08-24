@@ -12,12 +12,12 @@ import org.springframework.stereotype.Repository
  * @date 2021-12-30 15:24:03
  */
 @Repository
-interface SysUserMapper: BaseMapper<SysUser> {
+interface SysUserMapper : BaseMapper<SysUser> {
 
     /**
      * 通过账号查询用户
      * @param account String
      */
-    fun selectByAccount(@Param("account") account: String) : SysUser?
+    fun selectByAccount(@Param("account") account: String): SysUser?
 
 }

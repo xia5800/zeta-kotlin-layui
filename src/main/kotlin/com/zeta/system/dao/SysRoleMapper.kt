@@ -11,6 +11,6 @@ import org.springframework.stereotype.Repository
  * @date 2021-12-30 15:24:03
  */
 @Repository
-interface SysRoleMapper: BaseMapper<SysRole> {
+interface SysRoleMapper : BaseMapper<SysRole> {
 
 }

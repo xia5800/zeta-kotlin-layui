@@ -8,7 +8,7 @@ import cn.afterturn.easypoi.handler.inter.IExcelModel
  *
  * @author gcc
  */
-abstract class ImportPoi: IExcelModel, IExcelDataModel {
+abstract class ImportPoi : IExcelModel, IExcelDataModel {
 
     /** 导入的错误信息 */
     var importErrorMsg: String? = null

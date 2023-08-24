@@ -8,7 +8,7 @@ import io.swagger.annotations.Api
 import org.springframework.stereotype.Controller
 import org.springframework.web.bind.annotation.RequestMapping
 import org.zetaframework.base.controller.SuperSimpleController
-import org.zetaframework.base.controller.crud.QueryController
+import org.zetaframework.base.controller.curd.QueryController
 import org.zetaframework.base.controller.view.IndexView
 import org.zetaframework.base.param.PageParam
 import org.zetaframework.base.result.PageResult
@@ -16,9 +16,7 @@ import org.zetaframework.core.log.annotation.SysLog
 import org.zetaframework.core.saToken.annotation.PreAuth
 
 /**
- * <p>
  * 登录日志 前端控制器
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-03-21 16:33:13

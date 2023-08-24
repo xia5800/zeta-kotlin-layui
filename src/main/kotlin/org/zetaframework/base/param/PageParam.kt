@@ -13,7 +13,7 @@ import io.swagger.annotations.ApiModelProperty
  * @author gcc
  */
 @ApiModel(description = "分页查询参数")
-class PageParam private constructor(){
+class PageParam private constructor() {
     /** 当前页 */
     @ApiModelProperty(value = "当前页", example = "1", required = true)
     var page: Long = 1
@@ -23,7 +23,12 @@ class PageParam private constructor(){
     var limit: Long = 10
 
     /** 排序字段 */
-    @ApiModelProperty(value = "排序字段", allowableValues = "id,createTime,updateTime", example = "id", required = false)
+    @ApiModelProperty(
+        value = "排序字段",
+        allowableValues = "id,createTime,updateTime",
+        example = "id",
+        required = false
+    )
     var sort: String? = null
 
     /** 排序规则 */
@@ -31,7 +36,7 @@ class PageParam private constructor(){
     var order: String? = null
 
 
-    constructor(page: Long, limit: Long): this() {
+    constructor(page: Long, limit: Long) : this() {
         this.page = page
         this.limit = limit
     }
@@ -57,7 +62,9 @@ class PageParam private constructor(){
             // bug fix: 驼峰转下划线  说明：忘记处理了orz --by gcc
             val sortField = StrUtil.toUnderlineCase(sortArr[i])
             orders.add(
-                if (StrUtil.equalsAny(orderArr[i], "asc", "ascending")) OrderItem.asc(sortField) else OrderItem.desc(sortField)
+                if (StrUtil.equalsAny(orderArr[i], "asc", "ascending")) OrderItem.asc(sortField) else OrderItem.desc(
+                    sortField
+                )
             )
         }
         page.orders = orders
@@ -86,7 +93,9 @@ class PageParam private constructor(){
      * @param descs 倒序排序的字段
      */
     fun setDefaultOrder(ascs: List<String>? = null, descs: List<String>? = null) {
-        if (ascs == null && descs == null) { return }
+        if (ascs == null && descs == null) {
+            return
+        }
 
         val sortList: MutableList<String> = mutableListOf()
         val orderList: MutableList<String> = mutableListOf()
@@ -114,7 +123,9 @@ class PageParam private constructor(){
      * @param field 倒序排序的字段  例如：createTime、create_time 均可
      */
     fun setDefaultDesc(field: String) {
-        if (field === "") { return }
+        if (field === "") {
+            return
+        }
         setDefaultOrder(descs = mutableListOf(field))
     }
 }

@@ -3,11 +3,10 @@ package com.zeta.system.controller
 import cn.hutool.core.bean.BeanUtil
 import com.baomidou.mybatisplus.extension.kotlin.KtQueryWrapper
 import com.github.xiaoymin.knife4j.annotations.ApiOperationSupport
-import com.zeta.system.model.dto.sysMenu.MenuSelectData
 import com.zeta.system.model.dto.sysMenu.SysMenuSaveDTO
 import com.zeta.system.model.dto.sysMenu.SysMenuUpdateDTO
 import com.zeta.system.model.entity.SysMenu
-import com.zeta.system.model.enumeration.MenuTypeEnum
+import com.zeta.system.model.enums.MenuTypeEnum
 import com.zeta.system.model.param.SysMenuQueryParam
 import com.zeta.system.service.ISysMenuService
 import io.swagger.annotations.Api
@@ -24,7 +23,6 @@ import org.zetaframework.base.result.XmSelectResult
 import org.zetaframework.core.exception.BusinessException
 import org.zetaframework.core.saToken.annotation.PreAuth
 import org.zetaframework.core.saToken.annotation.PreCheckPermission
-import org.zetaframework.core.utils.JSONUtil
 import org.zetaframework.core.utils.TreeUtil
 import javax.servlet.http.HttpServletRequest
 
@@ -38,7 +36,7 @@ import javax.servlet.http.HttpServletRequest
 @PreAuth(replace = "sys:menu")
 @Controller
 @RequestMapping("/system/menu")
-class SysMenuController: SuperAllViewController<ISysMenuService, Long, SysMenu, SysMenuQueryParam, SysMenuSaveDTO, SysMenuUpdateDTO>() {
+class SysMenuController : SuperAllViewController<ISysMenuService, Long, SysMenu, SysMenuQueryParam, SysMenuSaveDTO, SysMenuUpdateDTO>() {
 
     /**
      * 当前模块路径

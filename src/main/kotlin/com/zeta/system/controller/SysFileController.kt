@@ -12,8 +12,8 @@ import org.springframework.validation.annotation.Validated
 import org.springframework.web.bind.annotation.*
 import org.springframework.web.multipart.MultipartFile
 import org.zetaframework.base.controller.SuperSimpleController
-import org.zetaframework.base.controller.crud.DeleteController
-import org.zetaframework.base.controller.crud.QueryController
+import org.zetaframework.base.controller.curd.DeleteController
+import org.zetaframework.base.controller.curd.QueryController
 import org.zetaframework.base.controller.view.IndexView
 import org.zetaframework.base.result.ApiResult
 import org.zetaframework.core.log.annotation.SysLog
@@ -23,9 +23,7 @@ import org.zetaframework.core.saToken.annotation.PreMode
 import javax.servlet.http.HttpServletResponse
 
 /**
- * <p>
  * 系统文件 前端控制器
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-04-11 11:18:44
@@ -56,7 +54,7 @@ class SysFileController: SuperSimpleController<ISysFileService, SysFile>(),
      */
     @SysLog(request = false)
     @PreCheckPermission(value = ["{}:add", "{}:save"], mode = PreMode.OR)
-    @ApiOperation("上传文件")
+    @ApiOperation(value = "上传文件")
     @ResponseBody
     @PostMapping("/upload")
     fun upload(
@@ -76,7 +74,7 @@ class SysFileController: SuperSimpleController<ISysFileService, SysFile>(),
      */
     @SysLog(request = false)
     @PreCheckPermission(value = ["{}:add", "{}:save"], mode = PreMode.OR)
-    @ApiOperation("上传base64文件")
+    @ApiOperation(value = "上传base64文件")
     @ResponseBody
     @PostMapping("/upload64")
     fun uploadBase64(@RequestBody @Validated uploadParam: SysFileUploadParam): ApiResult<SysFile> {
@@ -92,7 +90,7 @@ class SysFileController: SuperSimpleController<ISysFileService, SysFile>(),
      */
     @SysLog(response = false)
     @PreCheckPermission(value = ["{}:export"])
-    @ApiOperation("下载文件")
+    @ApiOperation(value = "下载文件")
     @ResponseBody
     @GetMapping(value = ["/download"], produces = ["application/octet-stream"])
     fun download(@RequestParam @ApiParam("文件id") id: Long, response: HttpServletResponse) {

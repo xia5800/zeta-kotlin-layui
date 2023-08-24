@@ -5,24 +5,22 @@ import com.zeta.system.model.entity.SysLoginLog
 import com.zeta.system.model.param.SysLoginLogQueryParam
 import org.zetaframework.base.param.PageParam
 import org.zetaframework.base.result.PageResult
-import org.zetaframework.core.log.model.SysLoginLogDTO
+import org.zetaframework.core.log.model.LoginLogDTO
 
 /**
- * <p>
  * 登录日志 服务类
- * </p>
  *
  * @author AutoGenerator
  * @date 2022-03-21 16:33:13
  */
-interface ISysLoginLogService: IService<SysLoginLog> {
+interface ISysLoginLogService : IService<SysLoginLog> {
 
     /**
      * 保存用户登录日志
      *
-     * @param loginLogDTO [SysLoginLogDTO]
+     * @param loginLogDTO [LoginLogDTO]
      */
-    fun save(loginLogDTO: SysLoginLogDTO)
+    fun save(loginLogDTO: LoginLogDTO)
 
     /**
      * 自定义分页查询

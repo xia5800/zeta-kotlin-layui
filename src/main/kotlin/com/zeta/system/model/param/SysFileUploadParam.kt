@@ -1,12 +1,11 @@
 package com.zeta.system.model.param
 
 import io.swagger.annotations.ApiModel
+import io.swagger.annotations.ApiModelProperty
 import javax.validation.constraints.NotBlank
 
 /**
- * <p>
  * 系统文件 上传参数
- * </p>
  *
  * @author gcc
  */
@@ -14,10 +13,12 @@ import javax.validation.constraints.NotBlank
 data class SysFileUploadParam(
 
     /** 文件base64 */
+    @ApiModelProperty(value = "文件base64", required = true)
     @get:NotBlank(message = "base64值不能为空")
     var base64: String? = null,
 
     /** 业务类型 */
+    @ApiModelProperty(value = "业务类型", required = false)
     var bizType: String? = null,
 
-)
+    )

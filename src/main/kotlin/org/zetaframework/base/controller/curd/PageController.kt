@@ -15,7 +15,7 @@ import org.zetaframework.base.result.PageResult
  * @param <QueryParam>  查询参数
  * @author gcc
  */
-interface PageController<Entity, QueryParam>: BaseController<Entity> {
+interface PageController<Entity, QueryParam> : BaseController<Entity> {
 
     /**
      * 分页查询
@@ -52,7 +52,11 @@ interface PageController<Entity, QueryParam>: BaseController<Entity> {
      * @param param PageParams<PageQuery>
      * @return QueryWrapper<Entity>
      */
-    fun handlerWrapper(model: Entity?, pageParam: PageParam? = null, queryParam: QueryParam? = null): QueryWrapper<Entity> {
+    fun handlerWrapper(
+        model: Entity?,
+        pageParam: PageParam? = null,
+        queryParam: QueryParam? = null
+    ): QueryWrapper<Entity> {
         // ?.let 不为空执行
         return model?.let { QueryWrapper<Entity>(model) } ?: QueryWrapper<Entity>()
     }
@@ -75,6 +79,6 @@ interface PageController<Entity, QueryParam>: BaseController<Entity> {
      *
      * @param page IPage
      */
-    fun handlerResult(page: IPage<Entity>) { }
+    fun handlerResult(page: IPage<Entity>) {}
 
 }

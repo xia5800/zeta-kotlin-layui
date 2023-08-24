@@ -1,4 +1,4 @@
-package com.zeta.system.model.enumeration
+package com.zeta.system.model.enums
 
 import io.swagger.annotations.ApiModel
 
@@ -10,8 +10,10 @@ import io.swagger.annotations.ApiModel
 enum class MenuTypeEnum(val code: Int) {
     /** 目录 */
     DIRECTORY(0),
+
     /** 菜单 */
     MENU(1),
+
     /** 权限 */
     RESOURCE(2);
 }
