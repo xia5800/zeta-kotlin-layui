@@ -2,11 +2,10 @@ package com.zeta
 
 import cn.dev33.satoken.secure.BCrypt
 import com.zeta.system.model.entity.*
-import com.zeta.system.model.enumeration.MenuTypeEnum
-import com.zeta.system.model.enumeration.SexEnum
-import com.zeta.system.model.enumeration.UserStateEnum
+import com.zeta.system.model.enums.MenuTypeEnum
+import com.zeta.system.model.enums.SexEnum
+import com.zeta.system.model.enums.UserStateEnum
 import com.zeta.system.service.*
-import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.test.context.SpringBootTest
 import org.zetaframework.core.mybatisplus.generator.UidGenerator
@@ -159,6 +158,9 @@ class KtZetaApplicationTests {
         var monitoringSort = 1
         val monitoringId = uidGenerator.getUid()
         batchList.add(buildMenu(monitoringId, 0L, 999, "系统监控", MenuTypeEnum.DIRECTORY, icon = "layui-icon layui-icon-auz"))
+        // 系统监控-服务器监控
+        val serverMonitorId = uidGenerator.getUid()
+        batchList.add(buildMenu(serverMonitorId, monitoringId, monitoringSort++, "服务器监控", MenuTypeEnum.MENU, path = "/monitor/index"))
         // 系统监控-druid
         val druidId = uidGenerator.getUid()
         batchList.add(buildMenu(druidId, monitoringId, monitoringSort++, "druid", MenuTypeEnum.MENU, path = "/druid"))
