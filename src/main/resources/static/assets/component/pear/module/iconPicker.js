@@ -33,12 +33,19 @@ layui.define(['laypage', 'form'], function(exports) {
 			click = opts.click,
 			// 渲染成功后的回调
 			success = opts.success,
+			// 前缀 默认使用 layui-icon
+			ICON_prefix = opts.prefix == null ? "layui-icon" : opts.prefix,
+			// 异步获取外部字体图标数据
+			ICON_url = opts.url ,
 			// json数据
 			data = {},
 			// 唯一标识
 			tmp = new Date().getTime(),
 			// 是否使用的class数据
 			isFontClass = opts.type === 'fontClass',
+			// 是否使用自定义图标数据
+			isCustom = opts.url !=null && opts.prefix != null,
+
 			// 初始化时input的值
 			ORIGINAL_ELEM_VALUE = $(elem).val(),
 			TITLE = 'layui-select-title',
@@ -52,8 +59,12 @@ layui.define(['laypage', 'form'], function(exports) {
 
 		var a = {
 			init: function() {
-				data = common.getData[type]();
-
+				if(isCustom)
+				{
+					data = common.ajaxData(ICON_url,ICON_prefix);
+				}else{
+					data = common.getData[type]();
+				}
 				a.hideElem().createSelect().createBody().toggleSelect();
 				a.preventEvent().inputListen();
 				common.loadCss();
@@ -89,14 +100,14 @@ layui.define(['laypage', 'form'], function(exports) {
 				// 默认图标
 				if (ORIGINAL_ELEM_VALUE === '') {
 					if (isFontClass) {
-						ORIGINAL_ELEM_VALUE = '';
+						ORIGINAL_ELEM_VALUE = 'layui-icon-circle-dot';
 					} else {
-						ORIGINAL_ELEM_VALUE = '';
+						ORIGINAL_ELEM_VALUE = '&#xe617;';
 					}
 				}
 
-				if (isFontClass) {
-					oriIcon = '<i class="layui-icon ' + ORIGINAL_ELEM_VALUE + '">';
+				if (isFontClass || isCustom) {
+					oriIcon = '<i class="'+ ICON_prefix + ' ' + ORIGINAL_ELEM_VALUE + '">';
 				} else {
 					oriIcon += ORIGINAL_ELEM_VALUE;
 				}
@@ -200,9 +211,10 @@ layui.define(['laypage', 'form'], function(exports) {
 					// 每个图标dom
 					var icon = '<div class="layui-iconpicker-icon-item" title="' + obj + '" ' +
 						style + '>';
-					if (isFontClass) {
-						icon += '<i class="layui-icon ' + obj + '"></i>';
-					} else {
+					if (isFontClass || isCustom)
+					{
+						icon += '<i class="'+ ICON_prefix + ' ' + obj + '"></i>';
+					}else{
 						icon += '<i class="layui-icon">' + obj.replace('amp;', '') + '</i>';
 					}
 					icon += '</div>';
@@ -312,13 +324,14 @@ layui.define(['laypage', 'form'], function(exports) {
 			check: function() {
 				var item = '#' + PICKER_BODY + ' .layui-iconpicker-icon-item';
 				a.event('click', item, function(e) {
-					var el = $(e.currentTarget).find('.layui-icon'),
+					var el = $(e.currentTarget).find('.' + ICON_prefix),
 						icon = '';
-					if (isFontClass) {
+					console.log( el.attr('class'));
+					if (isFontClass || isCustom) {
 						var clsArr = el.attr('class').split(/[\s\n]/),
 							cls = clsArr[1],
 							icon = cls;
-						$('#' + TITLE_ID).find('.layui-iconpicker-item .layui-icon').html(
+						$('#' + TITLE_ID).find('.layui-iconpicker-item .' + ICON_prefix).html(
 							'').attr('class', clsArr.join(' '));
 					} else {
 						var cls = el.html(),
@@ -328,12 +341,7 @@ layui.define(['laypage', 'form'], function(exports) {
 					}
 
 					$('#' + ICON_BODY).removeClass(selected).addClass(unselect);
-					// 说明：回显图标的时候，添加'layui-icon'class. --by gcc
-                    if (isFontClass) {
-                        $(elem).val('layui-icon ' + icon).attr('value', icon);
-                    } else {
-					    $(elem).val(icon).attr('value', icon);
-                    }
+					$(elem).val(icon).attr('value', icon);
 					// 回调
 					if (click) {
 						click({
@@ -359,7 +367,6 @@ layui.define(['laypage', 'form'], function(exports) {
 				$(BODY).on(evt, el, fn);
 			}
 		};
-
 		var common = {
 			/**
 			 * 加载样式表
@@ -424,15 +431,7 @@ layui.define(['laypage', 'form'], function(exports) {
 						"layui-icon-face-smile-fine", "layui-icon-list", "layui-icon-release",
 						"layui-icon-ok", "layui-icon-help", "layui-icon-chat", "layui-icon-top",
 						"layui-icon-star", "layui-icon-star-fill", "layui-icon-close-fill",
-						"layui-icon-close", "layui-icon-ok-circle", "layui-icon-add-circle-fine",
-                        // 说明：更新图标至最新的168个 --by gcc
-                        "layui-icon-heart-fill", "layui-icon-heart", "layui-icon-light", "layui-icon-time",
-                        "layui-icon-bluetooth", "layui-icon-at", "layui-icon-mute", "layui-icon-mike",
-                        "layui-icon-key", "layui-icon-gift", "layui-icon-email", "layui-icon-rss",
-                        "layui-icon-wifi", "layui-icon-logout", "layui-icon-android", "layui-icon-ios",
-                        "layui-icon-windows", "layui-icon-transfer", "layui-icon-service", "layui-icon-subtraction",
-                        "layui-icon-addition", "layui-icon-slider", "layui-icon-print", "layui-icon-export",
-                        "layui-icon-cols", "layui-icon-screen-restore", "layui-icon-screen-full",
+						"layui-icon-close", "layui-icon-ok-circle", "layui-icon-add-circle-fine"
 					];
 					return arr;
 				},
@@ -471,17 +470,31 @@ layui.define(['laypage', 'form'], function(exports) {
 						"&amp;#xe60f;", "&amp;#xe60e;", "&amp;#xe60d;", "&amp;#xe60c;",
 						"&amp;#xe60a;", "&amp;#xe609;", "&amp;#xe605;", "&amp;#xe607;",
 						"&amp;#xe606;", "&amp;#xe604;", "&amp;#xe600;", "&amp;#xe658;",
-						"&amp;#x1007;", "&amp;#x1006;", "&amp;#x1005;", "&amp;#xe608;",
-                        // 说明：更新图标至最新的168个 --by gcc
-                        "&amp;#xe68f;", "&amp;#xe68c;", "&amp;#xe748;", "&amp;#xe68d;",
-                        "&amp;#xe689;", "&amp;#xe687;", "&amp;#xe685;", "&amp;#xe6dc;",
-                        "&amp;#xe683;", "&amp;#xe627;", "&amp;#xe618;", "&amp;#xe808;",
-                        "&amp;#xe7e0;", "&amp;#xe682;", "&amp;#xe684;", "&amp;#xe680;",
-                        "&amp;#xe67f;", "&amp;#xe691;", "&amp;#xe626;", "&amp;#xe67e;",
-                        "&amp;#xe624;", "&amp;#xe714;", "&amp;#xe66d;", "&amp;#xe67d;",
-                        "&amp;#xe610;", "&amp;#xe758;", "&amp;#xe622;",
+						"&amp;#x1007;", "&amp;#x1006;", "&amp;#x1005;", "&amp;#xe608;"
 					];
-				}
+				},
+
+			},
+			//通过异步获取自定义图标数据源
+			ajaxData:function (url,prefix){
+				var iconlist = [];
+				$.ajax({
+					url: url,
+					type: 'get',
+					contentType: "application/x-www-form-urlencoded; charset=UTF-8",
+					async: false,
+					success: function (ret) {
+						var exp = eval("/"+prefix+"-(.*):/ig");
+						var result;
+						while ((result = exp.exec(ret)) != null) {
+							iconlist.push(prefix + '-' + result[1]);
+						}
+					},
+					error: function (xhr, textstatus, thrown) {
+						layer.msg('自定义图标接口有误');
+					}
+				});
+				return iconlist;
 			}
 		};
 

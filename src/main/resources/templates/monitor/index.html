@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <:include file="../common/css.html" title="服务器监控"/>
+</head>
+<body class="pear-container">
+    <!-- 监控盘 -->
+    <div class="layui-card">
+        <div class="layui-card-header">仪表盘</div>
+        <div class="layui-card-body">
+            <div class="layui-row layui-col-space10">
+                <div class="layui-col-xs6 layui-col-md3">
+                    <div id="cpu-gauge" style="width: 400px; height: 400px"></div>
+                </div>
+                <div class="layui-col-xs6 layui-col-md3">
+                    <div id="memory-gauge" style="width: 400px; height: 400px"></div>
+                </div>
+                <div class="layui-col-xs6 layui-col-md3">
+                    <div id="disk-gauge" style="width: 400px; height: 400px"></div>
+                </div>
+                <div class="layui-col-xs6 layui-col-md3">
+                    <div id="jvm-gauge" style="width: 400px; height: 400px"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- 磁盘状态 -->
+    <div class="layui-card">
+        <div class="layui-card-header">磁盘状态</div>
+        <div class="layui-card-body">
+            <div class="layui-row layui-col-space10" id="disk-info">
+            </div>
+        </div>
+    </div>
+    <!-- 服务器信息 -->
+    <div class="layui-card">
+        <div class="layui-card-header">服务器信息</div>
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane" action="" lay-filter="server-info-form-filter">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">服务器名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="name" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">操作系统</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="osName" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">cpu名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="cpuName" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">ip地址</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="ip" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">系统架构</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="osArch" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 150px;">逻辑处理器数量</label>
+                            <div class="layui-input-block" style="margin-left: 150px;" >
+                                <input type="text" name="physicalProcessorCount" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    <!-- Java虚拟机信息 -->
+    <div class="layui-card">
+        <div class="layui-card-header">Java虚拟机信息</div>
+        <div class="layui-card-body">
+            <form class="layui-form layui-form-pane" action="" lay-filter="jvm-info-form-filter">
+                <div class="layui-row">
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Java名称</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="jdkName" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">最大内存</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="maxMemory" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">可用内存</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="freeMemory" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">启动时间</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="startTime" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="layui-col-md6">
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">Java版本</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="jdkVersion" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label">已用内存</label>
+                            <div class="layui-input-block">
+                                <input type="text" name="usedMemory" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 150px;">内存使用率</label>
+                            <div class="layui-input-block" style="margin-left: 150px;" >
+                                <input type="text" name="usePercent" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                        <div class="layui-form-item">
+                            <label class="layui-form-label" style="width: 150px;">安装路径</label>
+                            <div class="layui-input-block" style="margin-left: 150px;" >
+                                <input type="text" name="jdkHome" autocomplete="off" class="layui-input" readonly>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- 依 赖 脚 本 -->
+    <:include file="../common/js.html" />
+    <script>
+        layui.use(['jquery', 'echarts', 'popup', 'element', 'form', 'util','topBar'], function() {
+            var $ = layui.jquery;
+            var popup = layui.popup;
+            var echarts = layui.echarts;
+            var element = layui.element;
+            var form = layui.form;
+            var util = layui.util;
+            var cpuOption = {
+                tooltip: {
+                    formatter: '{b} : {c}%'
+                },
+                series: [
+                    {
+                        name: '使用率',
+                        type: 'gauge',
+                        progress: {
+                            show: true
+                        },
+                        detail: {
+                            valueAnimation: true,
+                            formatter: '{value}'
+                        },
+                        data: [
+                            {
+                                value: 0,
+                                name: 'CPU'
+                            }
+                        ]
+                    }
+                ]
+            }
+            var memoryOption = {
+                tooltip: {
+                    formatter: '{b} : {c}%'
+                },
+                series: [
+                    {
+                        name: '使用率',
+                        type: 'gauge',
+                        progress: {
+                            show: true
+                        },
+                        detail: {
+                            valueAnimation: true,
+                            formatter: '{value}'
+                        },
+                        data: [
+                            {
+                                value: 0,
+                                name: '内存'
+                            }
+                        ]
+                    }
+                ]
+            }
+            var diskOption = {
+                tooltip: {
+                    formatter: '{b} : {c}%'
+                },
+                series: [
+                    {
+                        name: '使用率',
+                        type: 'gauge',
+                        progress: {
+                            show: true
+                        },
+                        detail: {
+                            valueAnimation: true,
+                            formatter: '{value}'
+                        },
+                        data: [
+                            {
+                                value: 0,
+                                name: '硬盘'
+                            }
+                        ]
+                    }
+                ]
+            }
+            var jvmOption = {
+                tooltip: {
+                    formatter: '{b} : {c}%'
+                },
+                series: [
+                    {
+                        name: '使用率',
+                        type: 'gauge',
+                        progress: {
+                            show: true
+                        },
+                        detail: {
+                            valueAnimation: true,
+                            formatter: '{value}'
+                        },
+                        data: [
+                            {
+                                value: 0,
+                                name: 'JVM'
+                            }
+                        ]
+                    }
+                ]
+            }
+            function init() {
+                $.get("/monitor/server", function (rsp) {
+                    if (rsp.code !== 200) {
+                        popup.failure(rsp.msg)
+                        return;
+                    }
+
+                    // 仪表板数据处理
+                    dashboardHandler(rsp.data)
+                    // 磁盘状态处理
+                    diskInfoHandler(rsp.data)
+                    // 服务器信息处理
+                    serverInfoHandler(rsp.data)
+                    // jvm信息处理
+                    jvmInfoHandler(rsp.data)
+                });
+            }
+            init();
+
+            setInterval(init, 2000);
+
+            /****************************************** 组件渲染区 *****************************************************/
+            // cpu仪表盘
+            var cpuGauge = echarts.init(document.getElementById('cpu-gauge'), 'walden');
+            cpuGauge.setOption(cpuOption);
+
+            // 内存仪表盘
+            var memoryGauge = echarts.init(document.getElementById('memory-gauge'), 'walden');
+            memoryGauge.setOption(memoryOption);
+
+            // 硬盘仪表盘
+            var diskGauge = echarts.init(document.getElementById('disk-gauge'), 'walden');
+            diskGauge.setOption(diskOption);
+
+            // jvm仪表盘
+            var jvmGauge = echarts.init(document.getElementById('jvm-gauge'), 'walden');
+            jvmGauge.setOption(jvmOption);
+
+            /****************************************** 事件监听区 *****************************************************/
+
+            window.onresize = function() {
+                cpuGauge.resize();
+                memoryGauge.resize();
+                diskGauge.resize();
+                jvmGauge.resize();
+            }
+
+            /****************************************** 功能方法区 *****************************************************/
+
+            /** 仪表板数据处理 */
+            window.dashboardHandler = function(data) {
+                // 设置cpu使用率
+                let cpuUsePercent = (data.cpuInfo.usePercent * 100).toFixed(2)
+                cpuOption.series[0].data[0].value = cpuUsePercent
+                // 设置内存使用率
+                let memoryUsePercent = (data.memoryInfo.usePercent * 100).toFixed(2)
+                memoryOption.series[0].data[0].value = memoryUsePercent
+                // 设置硬盘使用率
+                let diskUsePercent = data.diskInfos[0].usePercent
+                diskOption.series[0].data[0].value = diskUsePercent
+
+                // 设置jvm使用率
+                let jvmUsePercent = (data.jvmInfo.usePercent * 100).toFixed(2)
+                jvmOption.series[0].data[0].value = jvmUsePercent
+
+                cpuGauge.setOption(cpuOption);
+                memoryGauge.setOption(memoryOption);
+                diskGauge.setOption(diskOption);
+                jvmGauge.setOption(jvmOption);
+            }
+
+            /** 磁盘状态处理 */
+            window.diskInfoHandler = function(data) {
+                var diskInfos = data.diskInfos;
+                var html = '';
+                for (index in diskInfos) {
+                    html += '<div class="layui-col-xs3 layui-col-md3">'
+                    html += '    <p>'+diskInfos[index].mount+'</p>'
+                    html += '    <div class="layui-progress layui-progress-big" lay-showpercent="true" lay-filter="disk-info-progress">';
+                    html += '        <div class="layui-progress-bar" lay-percent="'+diskInfos[index].usePercent+'%"></div>';
+                    html += '    </div>'
+                    html += '    <span class="layui-font-gray">'+diskInfos[index].avail+'可用，共'+ diskInfos[index].size + '</span>'
+                    html += '</div>'
+                }
+                $("#disk-info").html(html)
+                element.render('progress', 'disk-info-progress')
+            }
+
+            /** 服务器信息处理 */
+            window.serverInfoHandler = function(data) {
+                let sysInfo = data.sysInfo;
+                let cpuInfo = data.cpuInfo;
+                let centralProcessor = data.centralProcessor;
+
+                let param = {
+                    "name": sysInfo.name,
+                    "osName": sysInfo.osName,
+                    "ip": sysInfo.ip,
+                    "osArch": sysInfo.osArch,
+                    "cpuName": centralProcessor.name,
+                    "physicalProcessorCount": cpuInfo.physicalProcessorCount
+                }
+                form.val('server-info-form-filter', param);
+            }
+
+            /** jvm信息处理 */
+            window.jvmInfoHandler = function(data) {
+                let jvmInfo = data.jvmInfo;
+
+                let param = {
+                    "jdkName": jvmInfo.jdkName,
+                    "maxMemory": jvmInfo.maxMemory,
+                    "freeMemory": jvmInfo.freeMemory,
+                    "startTime": util.toDateString(jvmInfo.startTime, 'yyyy-MM-dd HH:mm:ss'),
+                    "jdkVersion": jvmInfo.jdkVersion,
+                    "usedMemory": jvmInfo.usedMemory,
+                    "usePercent": (jvmInfo.usePercent * 100).toFixed(2) + '%',
+                    "jdkHome": jvmInfo.jdkHome,
+                }
+                form.val('jvm-info-form-filter', param);
+            }
+
+        })
+    </script>
+</body>
+</html>

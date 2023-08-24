@@ -37,11 +37,19 @@
                         <label class="layui-form-label">操作系统:</label>
                         <div class="layui-input-block layui-word-aux">${optLog.os!}</div>
                     </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">浏览器类型:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.browser!}</div>
+                    </div>
                 </div>
                 <div class="layui-col-md6">
                     <div class="layui-form-item">
                         <label class="layui-form-label">IP地址:</label>
                         <div class="layui-input-block layui-word-aux">${optLog.ip!}</div>
+                    </div>
+                    <div class="layui-form-item">
+                        <label class="layui-form-label">IP所在地区:</label>
+                        <div class="layui-input-block layui-word-aux">${optLog.ipRegion!}</div>
                     </div>
                     <div class="layui-form-item">
                         <label class="layui-form-label">操作描述:</label>
@@ -54,10 +62,6 @@
                                 ${parseInt(optLog.spendTime) / 1000}s
                             </:if>
                         </div>
-                    </div>
-                    <div class="layui-form-item">
-                        <label class="layui-form-label">浏览器类型:</label>
-                        <div class="layui-input-block layui-word-aux">${optLog.browser!}</div>
                     </div>
                 </div>
                 <div class="layui-form-item">

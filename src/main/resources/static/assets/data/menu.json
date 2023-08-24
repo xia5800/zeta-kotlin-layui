@@ -23,7 +23,7 @@
 			"title": "百度一下",
 			"icon": "layui-icon layui-icon-console",
 			"type": 1,
-			"openType": "_blank",
+			"openType": "_iframe",
 			"href": "http://www.bing.com"
 		}, {
 			"id": 15,
@@ -337,7 +337,7 @@
 				"icon": "layui-icon layui-icon-face-smile",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "/system/user/index"
+				"href": "view/system/user.html"
 			},
 			{
 				"id": 602,
@@ -345,48 +345,42 @@
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "/system/role/index"
+				"href": "view/system/role.html"
 			},
+
 			{
 				"id": 603,
-				"title": "菜单管理",
+				"title": "权限管理",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "/system/menu/index"
+				"href": "view/system/power.html"
 			},
+
 			{
 				"id": 604,
-				"title": "登录日志",
+				"title": "部门管理",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "/system/loginLog/index"
+				"href": "view/system/deptment.html"
 			},
 			{
 				"id": 605,
-				"title": "操作日志",
+				"title": "行为日志",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "/system/optLog/index"
-			},
-            {
+				"href": "view/system/log.html"
+			}, {
 				"id": 606,
 				"title": "数据字典",
 				"icon": "layui-icon layui-icon-face-cry",
 				"type": 1,
 				"openType": "_iframe",
-				"href": "/system/dict/index"
-			},
-            {
-                "id": 607,
-                "title": "文件管理",
-                "icon": "layui-icon layui-icon-face-cry",
-                "type": 1,
-                "openType": "_iframe",
-                "href": "/system/file/index"
-            }
+				"href": "view/system/dict.html"
+			}
+
 		]
 	},
 	{

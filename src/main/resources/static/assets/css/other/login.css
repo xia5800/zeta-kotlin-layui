@@ -1,8 +1,3 @@
-body {
-    background-image: url("/assets/images/background.svg");
-    background-size: cover;
-}
-
 .layui-form {
 	width: 320px !important;
 	margin: auto !important;
@@ -95,6 +90,7 @@ body {
 	float: right;
 	height: 42px;
 	border: #e6e6e6 1px solid;
+	cursor: pointer;
 }
 
 @media (max-width:768px){

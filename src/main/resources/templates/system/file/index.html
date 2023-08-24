@@ -167,7 +167,7 @@
                         '            <p>点击上传，或将文件拖拽到此处</p>\n' +
                         '        </div>\n' +
                         '    </div>',
-                    area: ["400px", "280px"],
+                    area: ["420px", "300px"],
                     success: function (layero, dIndex) {
                         /** 文件上传按钮渲染 */
                         upload.render({
@@ -180,7 +180,7 @@
                             done: function(rsp){
                                 layer.closeAll('loading');
                                 // 如果上传失败
-                                if(rsp.code !== 200){
+                                if (rsp.code !== 200){
                                     toast.error({title: 'error', message: '文件上传失败', position: 'topCenter'});
                                     return;
                                 }

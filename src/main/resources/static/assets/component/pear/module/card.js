@@ -95,7 +95,11 @@ layui.define(['table', 'laypage','jquery', 'element'], function(exports) {
 					html += "<div id='cardpage'></div>";
 				}
 				else {
-					html = "<p>没有数据</p>";
+				    if (data.code != option.response.statusCode) {
+					    html = "<p>" + data.msg + "</p>";
+				    } else {
+				    	html = "<p>没有数据</p>";
+				    }
 				}
 				$(option.elem).html(html);
 				if (option.page) {
@@ -177,7 +181,7 @@ layui.define(['table', 'laypage','jquery', 'element'], function(exports) {
 	function createCard(elem, linenum, item, no) {
 		var line = 12 / linenum;
 		var card =
-			'<div id=' + item.id + ' onclick="cardTableCheckedCard(' + elem + ',this)" class="layui-col-md' + line + ' ew-datagrid-item" data-index="' + no+'" data-number="1"> <div class="project-list-item"> <img class="project-list-item-cover" src="' +item.image + '"> <div class="project-list-item-body"> <h2>' + item.title + '</h2> <div class="project-list-item-text layui-text">' + item.remark + '</div> <div class="project-list-item-desc"> <span class="time">' +item.time + '</span> <div class="ew-head-list"></div> </div> </div > </div > </div > '
+			'<div id=' + item.id + ' onclick="cardTableCheckedCard(' + elem + ',this)" class="layui-col-md' + line + ' ew-datagrid-item" data-index="' + no+'" data-number="1"> <div class="project-list-item"> <img class="project-list-item-cover" src="' + item.image + '"> <div class="project-list-item-body"> <h2 class="layui-elip">' + item.title + '</h2> <div class="project-list-item-text layui-text">' + item.remark + '</div> <div class="project-list-item-desc"> <span class="time">' +item.time + '</span> <div class="ew-head-list"></div> </div> </div > </div > </div > '
 		return card;
 	}
 	
@@ -187,9 +191,12 @@ layui.define(['table', 'laypage','jquery', 'element'], function(exports) {
 		data.msg = tempData[option.response.msgName];
 		data.count = tempData[option.response.countName];
 		var dataList = tempData[option.response.dataName];
+        if(!dataList){
+            return data;
+        }
 		data.data = [];
 		for (var i = 0; i < dataList.length; i++) {
-			var item = {};
+			var item = dataList[i];
 			item.id = dataList[i][option.request.idName];
 			item.image = dataList[i][option.request.imageName];
 			item.title = dataList[i][option.request.titleName];
@@ -212,6 +219,7 @@ layui.define(['table', 'laypage','jquery', 'element'], function(exports) {
 		$(obj).addClass('layui-table-click').siblings().removeClass('layui-table-click');
 		var item = {};
 		item.id = obj.id;
+		item.index = $(obj).attr('data-index');
 		item.image = $(obj).find('.project-list-item-cover')[0].src;
 		item.title = $(obj).find('h2')[0].innerHTML;
 		item.remark = $(obj).find('.project-list-item-text')[0].innerHTML;

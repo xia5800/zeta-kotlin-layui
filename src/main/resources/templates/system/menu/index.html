@@ -142,15 +142,15 @@
 
             /** 表头工具栏点击事件监听 */
             table.on('toolbar(menu-table)', function(obj){
-                if(obj.event === 'add'){
+                if (obj.event === 'add'){
                     window.add();
-                } else if(obj.event === 'refresh'){
+                } else if (obj.event === 'refresh'){
                     window.refresh();
-                } else if(obj.event === 'batchRemove'){
+                } else if (obj.event === 'batchRemove'){
                     window.batchRemove(obj);
-                }  else if(obj.event === 'expandAll'){
+                }  else if (obj.event === 'expandAll'){
                     treetable.expandAll("#menu-table");
-                } else if(obj.event === 'foldAll'){
+                } else if (obj.event === 'foldAll'){
                     treetable.foldAll("#menu-table");
                 }
             });

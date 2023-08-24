@@ -121,7 +121,7 @@ body,
 .pear-admin .layui-side {
 	top: 0px;
 	width: 230px;
-	box-shadow: 2px 0 6px rgba(0, 21, 41, .35);
+	box-shadow: 2px 0 6px rgba(0, 21, 41, .20);
 	z-index: 9999;
 }
 
@@ -170,6 +170,15 @@ body,
 
 .pear-admin .layui-footer.close {
 	display: none;
+}
+
+@media screen and (max-width: 768px) {
+  .pear-admin.banner-layout .layui-header .layui-logo {
+      display: none;
+  }
+  .pear-admin.banner-layout .layui-header .layui-layout-left {
+      left: 0px;
+  }
 }
 
 /** 收缩布局 */
@@ -465,7 +474,13 @@ body,
 	-webkit-transition: all .3s;
 	opacity: 0;
 }
-
+@media screen and (max-width: 450px) {
+  .pearone-color .layui-form-item .layui-input-inline {
+      float: left !important;
+      width: 190px !important;
+      margin: 0 10px 0 0!important;
+  }
+}
 .select-color {
 	margin-bottom: 30px;
 }
@@ -499,12 +514,6 @@ body,
 }
 
 /* 搜索面板 */
-.menu-search-content .layui-input-prefix {
-	position: absolute;
-	margin-top: 10px;
-	margin-left: 10px;
-}
-
 .menu-search-content .layui-input {
 	padding-left: 30px;
 }

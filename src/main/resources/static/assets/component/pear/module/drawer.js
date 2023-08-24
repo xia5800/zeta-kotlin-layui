@@ -218,7 +218,7 @@ layui.define(['jquery', 'element', 'layer', 'loading'], function (exports) {
 			if (area instanceof Array) {
 				area = area[0];
 			}
-			if (area.includes("%")) {
+			if (area.indexOf("%") != -1) {
 				left = targetEl.innerWidth() * (1 - area.replace("%", "") / 100);
 			} else {
 				left = targetEl.innerWidth() - area;
@@ -229,7 +229,7 @@ layui.define(['jquery', 'element', 'layer', 'loading'], function (exports) {
 			if (area instanceof Array) {
 				area = area[1];
 			}
-			if (area.includes("%")) {
+			if (area.indexOf("%") != -1) {
 				top = targetEl.innerHeight() * (1 - area.replace("%", "") / 100);
 			} else {
 				top = targetEl.innerHeight() - area;
