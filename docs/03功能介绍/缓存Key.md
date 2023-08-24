@@ -68,20 +68,20 @@ import com.zeta.common.cacheKey.CaptchaStringCacheKey
 @RestController
 @RequestMapping("/api/demo")
 class DemoController(private val captchaCacheKey: CaptchaStringCacheKey) {
-    
+
     @GetMapping
     fun example() {
         // 设置缓存
         captchaCacheKey.set("123", "验证码的值")
-        
+
         // 获取缓存值
         val cacheValue: String? = captchaCacheKey.get<String>("123")
         println(cacheValue)
-        
+
         // 删除缓存
         captchaCacheKey.delete("123")
     }
-    
+
 }
 ```
 
