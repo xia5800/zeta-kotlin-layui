@@ -11,7 +11,7 @@
 
     <groupId>com.zeta</groupId>
     <artifactId>zeta-kotlin-layui</artifactId>
-    <version>1.0.2</version>
+    <version>1.0.3</version>
     <name>${project.artifactId}</name>
     <description>
         zeta-kotlin-layui项目是使用kotlin语言基于spring boot、mybatis-plus、sa-token、layui等框架开发的项目脚手架。
