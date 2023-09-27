@@ -3,9 +3,11 @@ package org.zetaframework.base.param
 import cn.hutool.core.util.StrUtil
 import com.baomidou.mybatisplus.core.metadata.IPage
 import com.baomidou.mybatisplus.core.metadata.OrderItem
+import com.baomidou.mybatisplus.core.toolkit.sql.SqlInjectionUtils
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page
 import io.swagger.annotations.ApiModel
 import io.swagger.annotations.ApiModelProperty
+import org.zetaframework.core.exception.ArgumentException
 
 /**
  * 分页查询参数
@@ -61,6 +63,8 @@ class PageParam private constructor() {
         for (i in sortArr.indices) {
             // bug fix: 驼峰转下划线  说明：忘记处理了orz --by gcc
             val sortField = StrUtil.toUnderlineCase(sortArr[i])
+            // 检查参数是否存在 SQL 注入
+            if (SqlInjectionUtils.check(sortField)) { throw ArgumentException("非法请求参数") }
             orders.add(
                 if (StrUtil.equalsAny(orderArr[i], "asc", "ascending")) OrderItem.asc(sortField) else OrderItem.desc(
                     sortField
@@ -102,11 +106,17 @@ class PageParam private constructor() {
 
         // 如果有正序排序的字段，且字段不为空字符串。
         ascs?.filterNot { StrUtil.isBlank(it) }?.forEach {
+            // 检查参数是否存在 SQL 注入
+            if (SqlInjectionUtils.check(it)) { throw ArgumentException("非法请求参数") }
+
             sortList.add(it)
             orderList.add("asc")
         }
         // 如果有倒序排序的字段，且字段不为空字符串。
         descs?.filterNot { StrUtil.isBlank(it) }?.forEach {
+            // 检查参数是否存在 SQL 注入
+            if (SqlInjectionUtils.check(it)) { throw ArgumentException("非法请求参数") }
+
             sortList.add(it)
             orderList.add("desc")
         }
@@ -126,6 +136,9 @@ class PageParam private constructor() {
         if (field === "") {
             return
         }
+        // 检查参数是否存在 SQL 注入
+        if (SqlInjectionUtils.check(field)) { throw ArgumentException("非法请求参数") }
+
         setDefaultOrder(descs = mutableListOf(field))
     }
 }
